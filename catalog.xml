@@ -2,10 +2,10 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
 
 	<!-- convert various Corbas URLs to local paths -->
-	<rewriteSystem systemIdStartString="http://www.corbas.co.uk/schemas/" rewritePrefix="./"/>
-	<rewriteSystem systemIdStartString="http://www.corbas.net/schemas/" rewritePrefix="./"/>
-	<rewriteSystem systemIdStartString="https://www.corbas.co.uk/schemas/" rewritePrefix="./"/>
-	<rewriteSystem systemIdStartString="https://www.corbas.net/schemas/" rewritePrefix="./"/>
+	<rewriteSystem systemIdStartString="http://www.corbas.co.uk/" rewritePrefix="./"/>
+	<rewriteSystem systemIdStartString="http://www.corbas.net/" rewritePrefix="./"/>
+	<rewriteSystem systemIdStartString="https://www.corbas.co.uk/" rewritePrefix="./"/>
+	<rewriteSystem systemIdStartString="https://www.corbas.net/" rewritePrefix="./"/>
 
 	<!-- easily accessible identity transform -->
 	<uriSuffix uriSuffix="identity.xslt" uri="xslt/identity.xsl"/>
@@ -13,6 +13,6 @@
 	
 	<!-- XProc scripts -->
 	<uriSuffix uriSuffix="store-identity.xpl" uri="xproc/store-identity.xpl"/>
-	<uriSuffix uriSuffix="stylesheet-runner.xpl" uri="xproc/stylesheet-runner.xpl"/>
+	<uriSuffix uriSuffix="stylesheet-runner.xpl" uri="xproc/stylesheet-runner.xpl"/>	
 	
 </catalog>

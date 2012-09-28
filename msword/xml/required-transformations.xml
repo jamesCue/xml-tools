@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../schemas/docxconv.rnc" type="application/relax-ng-compact-syntax"?>
+<transformations 
+	xmlns="http://www.corbas.co.uk/ns/docxconvert"
+ 
+ 
+ logfile="file:/Users/nicg/Projects/xmltools/logs/docxconvert.log"
+ store="true"
+ name="required-transformations"
+ output.path="file:/Users/nicg/Projects/xmltools/logs/"
+ >
+	
+<transformation name="fixup-numbering" stylesheet="msword/xslt/word-numbering-fixup.xsl"/>
+<transformation name="docbook-elements" stylesheet="msword/xslt/map-to-docbook-elements.xsl"/>
+	
+</transformations>

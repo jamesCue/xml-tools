@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../schemas/docxconv.rnc" type="application/relax-ng-compact-syntax"?>
+<transformations xmlns="http://www.corbas.co.uk/ns/docxconvert" xml:base="https://www.corbas.co.uk/docxconvert/" logfile="file:/tmp/conversion.log.xml" store="true">
+	
+	<transformation name="Rewrite Word Numbering" stylesheet="word-numbering.xsl" store="false"/>
+	<transformation name="Map Elements to DocBook" stylesheet="word-components.xsl"/>
+	
+</transformations>
