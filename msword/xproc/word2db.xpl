@@ -54,6 +54,11 @@
                         Improved documentation.
                         </revremark>
                     </revision>
+                	<revision>
+                		<revnumber>5</revnumber>
+                		<date>2012-09-28</date>
+                		<revremark>Stripped down to basics for major refactor.</revremark>
+                	</revision>
                 </revhistory>
             </info>
             <para>XProc script to unzip a word docx document, extract metadata and convert to
@@ -77,56 +82,84 @@
         </p:documentation>
     </p:option>
 
-    <p:import href="library-1.0.xpl"/>
+	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
     <p:import href="docx2xml.xpl"/>
-    <p:import href="store-identity.xpl"/>
-	<p:import href="stylesheet-runner.xpl"/>
-    <p:import href="insert-db-structures.xpl"/>
-    <p:import href="refactor-document.xpl"/>
+	<p:import href="../../xproc/stylesheet-runner.xpl"/>
+	<p:import href="../../../xproc/store-identity.xpl"/>
+	<p:import href="mathtype.xpl"/>
 
     <!-- Extract docx file to a wrapped xml file -->
     <corbas:docx2xml name="extract-document">
-        <p:with-option name="package-url" select="$package-url"/>
+    	<p:with-option name="package-url" select="$package-url"/>
     </corbas:docx2xml>
+	
+	<ccproc:store-identity href="extracted.xml">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>
+	</ccproc:store-identity>
     
-    <!-- rewrite the numbering for lists to something more useable later -->   
-	<ccproc:stylesheet-runner href="extracted.xml" name="store-extracted" stylesheet-href="../xsl/word-to-docbook/word-numbering.xsl">
+    <!-- rewrite the numbering for lists to something more useable later. NB. Paths relative to stylesheet-runner.xpl  -->   
+	<ccproc:stylesheet-runner href="numbering-mapped.xml" name="remap-numbering" stylesheet-href="../msword/xslt/word-numbering-fixup.xsl">
         <p:with-option name="href-root" select='$href-root'/>
         <p:with-option name="execute-store" select="$log-step-output"/>
     </ccproc:stylesheet-runner>
      
     <!-- convert word markup to docbook elements -->
-	<ccproc:stylesheet-runner href="converted.xml" name="store-converted" stylesheet-href="../xsl/word-to-docbook/word-components.xsl">
+	<ccproc:stylesheet-runner href="convert-to-docbook-elements.xml" name="convert-to-docbook-elements" stylesheet-href="../msword/xslt/map-to-docbook.xsl">
         <p:with-option name="href-root" select='$href-root'/>
         <p:with-option name="execute-store" select="$log-step-output"/>        
     </ccproc:stylesheet-runner>
-    
-    <!-- Refactor converted xml into something more like DocBook-->
-    <corbas:refactor-document name="refactor">
-        <p:with-option name="href-root" select='$href-root'/>
-        <p:with-option name="log-step-output" select="$log-step-output"/>        
-    </corbas:refactor-document>
-        
-    <ccproc:store-identity href="refactored.xml" name="store-refactored">
-        <p:with-option name="href-root" select='$href-root'/>
-        <p:with-option name="execute-store" select="$log-step-output"/>        
-    </ccproc:store-identity>
-    
+	
+	<!-- convert equations to mathml in DocBook equation and inlineequation wrappers -->
+	<corbas:convert-mathtype>
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>
+	</corbas:convert-mathtype>
+	
+	<ccproc:store-identity href="equations.xml">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>
+	</ccproc:store-identity>
+	
+	
+	<!-- use style rules to refine docbook element conversion conversion -->
+	<ccproc:stylesheet-runner href="docbook-elements-improved-with-styles.xml" name="improve-docbook-elements-with-styles" stylesheet-href="../msword/xslt/initial-style-mapping.xsl">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>        
+	</ccproc:stylesheet-runner>
+	
+	<!-- the above will have converted some paras to titles. Work on the titles -->
+	<ccproc:stylesheet-runner href="title-levels-inserted.xml" name="insert-title-levels" stylesheet-href="../msword/xslt/insert-title-levels.xsl">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>        
+	</ccproc:stylesheet-runner>
+	
+	<!-- Use the titles to convert the content into sections. -->
+	<ccproc:stylesheet-runner href="sections-inserted.xml" name="insert-sections" stylesheet-href="../msword/xslt/insert-sections.xsl">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>        
+	</ccproc:stylesheet-runner>
+	
+	<!-- ILO SPECIFICS -->
+	<ccproc:stylesheet-runner stylesheet-href="file:/Users/nicg/Projects/aimer/ILO/xslt/word-to-docbook/refactor-boxes.xsl" href="boxes-fixed.xml" name="fixup-boxes">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>        
+	</ccproc:stylesheet-runner>
 
-    <!-- This step inserts DocBook structure -->
-    <corbas:insert-db-structures name="build-db-structures">
-    	<p:with-option name="href-root" select='$href-root'/>
-    	<p:with-option name="log-step-output" select="$log-step-output"/>        
-    </corbas:insert-db-structures>
-
-    <ccproc:store-identity href="structured.xml" name="store-structured">
-        <p:with-option name="href-root" select='$href-root'/>
-        <p:with-option name="execute-store" select="$log-step-output"/>        
-    </ccproc:store-identity>
- 
+	<ccproc:stylesheet-runner stylesheet-href="file:/Users/nicg/Projects/aimer/ILO/xslt/word-to-docbook/refactor-figures.xsl" href="figures-fixed.xml" name="fixup-figures">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>        
+	</ccproc:stylesheet-runner>
+	
+	<ccproc:stylesheet-runner stylesheet-href="file:/Users/nicg/Projects/aimer/ILO/xslt/word-to-docbook/refactor-tables.xsl" href="tables-fixed.xml" name="fixup-tables">
+		<p:with-option name="href-root" select='$href-root'/>
+		<p:with-option name="execute-store" select="$log-step-output"/>        
+	</ccproc:stylesheet-runner>
+	
+     
     <!-- remove everything non docbook; done in xslt because it's a hassle
     to handle the sequence result otherwise -->
-	<ccproc:stylesheet-runner href="filtered.xml" name="insert-filtered" stylesheet-href="../xsl/word-to-docbook/strip-non-db.xsl">
+	<ccproc:stylesheet-runner href="filtered.xml" name="insert-filtered" stylesheet-href="../msword/xslt/strip-non-db.xsl">
         <p:with-option name="href-root" select='$href-root'/>
         <p:with-option name="execute-store" select="$log-step-output"/>        
     </ccproc:stylesheet-runner>
@@ -134,18 +167,9 @@
    
     <!-- insert identifiers on any node which should have one and doesn't -->
    <p:xslt name="insert-identifiers" version="2.0">
-    	<p:input port="source">
-    		<p:pipe port="result" step="insert-filtered"/>
-    	</p:input>
         <p:input port="stylesheet">
-            <p:document href="../xsl/word-to-docbook/insert-identifiers.xsl"/>
+            <p:document href="../../xslt/insert-identifiers.xsl"/>
         </p:input>        
     </p:xslt>
 	
-	<p:identity>
-		<p:input port="source">
-			<p:pipe port="result" step="insert-identifiers"/>
-		</p:input>
-	</p:identity>
-
 </p:pipeline>

@@ -6,7 +6,7 @@
 
 		<p:documentation>
 			<p xmlns="http:/wwww.w3.org/1999/xhtml">This step takes a sequence of transformation
-				elements (see <a href="doxconv.rnc">docxconv.rnc</a>) and executes them recursively
+				elements and executes them recursively
 				applying the each stylesheet to the result of the previous stylesheet. The final
 				result is the result of applying all the stylesheets in turn to the input
 				document.</p>
@@ -19,10 +19,10 @@
 			</p:documentation>
 		</p:input>
 
-		<p:input port="transformations" sequence="true">
+		<p:input port="stylesheets" sequence="true">
 			<p:documentation>
 				<p xmlns="http://www.w3.org/1999/xhtml">The secondary input port for the step
-					contains the sequence of transformation elements to be executed.</p>
+					contains the sequence of xslt stylesheets (already loaded) to be executed.</p>
 			</p:documentation>
 		</p:input>
 
@@ -34,14 +34,13 @@
 		</p:output>
 
 		<!-- Split of the first transformation from the sequence -->
-		<p:split-sequence name="split-transformations" initial-only="true" test="position()=1">
+		<p:split-sequence name="split-stylesheets" initial-only="true" test="position()=1">
 			<p:input port="source">
-				<p:pipe port="transformations" step="recursive-xslt"/>
+				<p:pipe port="stylesheets" step="recursive-xslt"/>
 			</p:input>
 		</p:split-sequence>
 
-		<!-- How many of these are left? We actually only care to know
-	if there are *any* hence the limit. -->
+		<!-- How many of these are left? We actually only care to know  if there are *any* hence the limit. -->
 		<p:count name="count-remaining-transformations" limit="1">
 			<p:input port="source">
 				<p:pipe port="not-matched" step="split-stylesheets"/>
@@ -53,7 +52,7 @@
 
 		<p:xslt>
 			<p:input port="source">
-				<p:pipe port="source" step="main"/>
+				<p:pipe port="source" step="recursive-xslt"/>
 			</p:input>
 			<p:input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
@@ -71,7 +70,7 @@
 		<p:choose>
 
 			<p:xpath-context>
-				<p:pipe port="result" step="count-remaining-transformation"/>
+				<p:pipe port="result" step="count-remaining-transformations"/>
 			</p:xpath-context>
 
 			<!-- If we have any transformations remaining recurse -->
@@ -79,7 +78,7 @@
 
 				<ccproc:recursive-xslt>
 
-					<p:input port="transformations">
+					<p:input port="stylesheets">
 						<p:pipe port="not-matched" step="split-stylesheets"/>
 					</p:input>
 

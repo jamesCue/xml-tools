@@ -31,15 +31,15 @@
         
     </xsl:template>
     
-    <xsl:template match="w:numFmt">
+    <xsl:template match="w:lvl/w:numFmt">
         <xsl:attribute name="format" select="@w:val"/>
     </xsl:template>
     
-    <xsl:template match="w:start">
+    <xsl:template match="w:lvl/w:start">
         <xsl:attribute name="start" select="@w:val"/>
     </xsl:template>
     
-    <xsl:template match="w:lvlText">
+    <xsl:template match="w:lvl/w:lvlText">
         <xsl:attribute name="text" select="@w:val"/>
     </xsl:template>
     

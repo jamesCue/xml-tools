@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://www.corbas.co.uk/ns/transforms/data" xmlns="http://relaxng.org/ns/structure/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+	<start>
+		<ref name="map"/>
+	</start>
+	<define name="map">
+		<element name="map">
+			<choice>
+				<oneOrMore>
+					<ref name="word-mapping"/>
+				</oneOrMore>
+				<oneOrMore>
+					<ref name="docbook-mapping"/>
+				</oneOrMore>
+			</choice>
+		</element>
+	</define>
+	<define name="word-mapping">
+		<element name="word-mapping">
+			<choice>
+				<attribute name="source-style">
+
+					<data type="string">
+						<param name="minLength">1</param>
+					</data>
+				</attribute>
+				<attribute name="source-style-prefix">
+					<data type="string">
+						<param name="minLength">1</param>
+					</data>
+
+				</attribute>
+				<attribute name="source-style-suffix">
+					<data type="string">
+						<param name="minLength">1</param>
+					</data>
+
+				</attribute>
+
+			</choice>
+			<documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">One of the
+				three attributes above must be provided. Inputs are matched against these styles. </documentation>
+
+			<optional>
+				<attribute name="suppress">
+					<data type="boolean"/>
+				</attribute>
+			</optional>
+			
+			<attribute name="target-element">
+				<data type="NMTOKENS">
+					<param name="minLength">1</param>
+				</data>
+				<documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">The
+					target-element attribute defines the name of the DocBook element(s) to be
+					created. This must be the name of a single element or a list of space separated
+					names (created with the leftmost as the outermost element.</documentation>
+			</attribute>
+			<optional>
+				<attribute name="heading-level">
+					<data type="int">
+						<param name="minInclusive">0</param>
+					</data>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="hint">
+					<data type="string">
+						<param name="minLength">1</param>
+					</data>
+				</attribute>
+			</optional>
+		</element>
+	</define>
+	<define name="docbook-mapping">
+		<element name="docbook-mapping">
+			<attribute name="source-role">
+				<data type="string">
+					<param name="minLength">1</param>
+				</data>
+			</attribute>
+			<optional>
+				<attribute name="target-element">
+					<data type="Name">
+						<param name="minLength">1</param>
+					</data>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="target-class">
+					<data type="string">
+						<param name="minLength">1</param>
+					</data>
+				</attribute>
+			</optional>
+		</element>
+	</define>
+
+</grammar>

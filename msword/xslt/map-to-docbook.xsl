@@ -4,13 +4,15 @@
     xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
     xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
     xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
-    xmlns="http://docbook.org/ns/docbook"
     xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
     xmlns:rp="http://schemas.openxmlformats.org/package/2006/relationships"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" 
+    xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+    xmlns="http://docbook.org/ns/docbook"
     xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="xs w cp r rp dc a">
 
+
+	<xsl:import href="../../xslt/identity.xsl"/>
 	<xsl:import href="map-tables-to-docbook.xsl"/>
 
     <xsl:output encoding="UTF-8" indent="yes"/>
@@ -19,7 +21,7 @@
     <xsl:param name="image-uri-base" select="'images'"/>
     
 	<!-- set to 'yes' to output the core properties from word into DocBook -->
-	<xsl:param name="transcribe.core.properties" select="'no'"/>
+	<xsl:param name="transcribe.core.properties" select="'yes'"/>
 
     <xsl:strip-space elements="*"/>
     <xsl:preserve-space elements="w:t"/>
@@ -39,7 +41,7 @@
         </xd:desc>
     </xd:doc>
     
-    <xsl:include href="../../xslt/identity.xsl"/>
+    
 
     <!-- word body can be skipped -->
     <xsl:template match="w:body">
@@ -57,24 +59,12 @@
     </xd:doc>
     <xsl:template match="w:document">
 
-        <book version="PBL1.0">
+    	<book version="5.0" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:m="http://www.w3.org/1998/Math/MathML">
             <info>
             	<!-- not worth phrasing the following with predicates -->
                 <xsl:if test="$transcribe.core.properties = 'yes'">
                 	<xsl:apply-templates select="//cp:coreProperties/*"/>
                 </xsl:if>
-            	<xsl:if test="not(normalize-space(//cp:coreProperties/dc:title)) or $transcribe.core.properties = 'no'">
-            		<title><xsl:comment> INSERT TITLE HERE </xsl:comment></title>
-            	</xsl:if>
-            	
-                <author>
-                   <personname><xsl:comment> INSERT AUTHOR NAME HERE </xsl:comment></personname>
-                </author>
-                <biblioid class="isbn"><xsl:comment>INSERT ISBN HERE</xsl:comment></biblioid>
-                <publisher><publishername>Penguin Group</publishername></publisher>
-                <cover role="cover">
-                    <mediaobject role='cover'><imageobject><imagedata fileref='cover.jpg'/></imageobject></mediaobject>
-                </cover>
             </info>
             <xsl:apply-templates/>
         </book>
@@ -111,11 +101,11 @@
 
     <xd:doc>
         <xd:desc>
-            <xd:p>Matches paragraphs that contain images.</xd:p>
+            <xd:p>Matches paras with a single run that contains an images - block images.</xd:p>
         </xd:desc>
     </xd:doc>
-    <xsl:template match="w:p[descendant::w:drawing]" priority="3">
-        <xsl:apply-templates select=".//a:blip"/>
+    <xsl:template match="w:p[count(w:r) = 1]/w:r[descendant::w:drawing]" priority="3">
+        <xsl:apply-templates select="descendant::w:drawing" mode="block"/>
     </xsl:template>
 
 
@@ -174,14 +164,48 @@
                 phrase element so that we can capture the character style name.</xd:p>
         </xd:desc>
     </xd:doc>
-    <xsl:template match="w:r[w:rPr/w:rStyle]" mode="base">
-                <phrase>
-                    <xsl:call-template name="cword:getStyleAsRole">
-                        <xsl:with-param name="properties" select="w:rPr"/>
-                    </xsl:call-template>
-                    <xsl:apply-templates/>
-                </phrase>
-    </xsl:template>
+
+	<xsl:template match="w:r[w:rPr/w:rStyle|w:rPr/w:b|w:rPr/w:i|w:rPr/w:vertAlign]" mode="base">
+		<xsl:variable name="style" select="if (cword:getStyle(w:rPr)) then concat(cword:getStyle(w:rPr), ' ') else ''"/>
+		<xsl:variable name="bold" select="if (cword:isBold(.)) then 'bold ' else ''"/>
+		<xsl:variable name="italic" select="if (cword:isItalic(.)) then 'italic ' else ''"/>
+		
+		<xsl:variable name="role" select="normalize-space(concat($style, $bold, $italic))"/>
+		
+		<xsl:choose>
+			<xsl:when test="cword:isSuperscript(.)">
+				<xsl:choose>
+					<xsl:when test="$role">
+						<phrase role="{$role}"><superscript><xsl:apply-templates/></superscript></phrase>
+					</xsl:when>
+					<xsl:otherwise>
+						<superscript><xsl:apply-templates/></superscript>
+					</xsl:otherwise>						
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="cword:isSubscript(.)">
+				<xsl:choose>
+					<xsl:when test="$role">
+						<phrase role="{$role}"><subscript><xsl:apply-templates/></subscript></phrase>
+					</xsl:when>
+					<xsl:otherwise>
+						<subscript><xsl:apply-templates/></subscript>
+					</xsl:otherwise>						
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<phrase role="{$role}"><xsl:apply-templates/></phrase>
+			</xsl:otherwise>
+			
+		</xsl:choose>
+		
+	</xsl:template>
+	
+	
+	<xsl:template match="w:r" mode="base">
+		<xsl:apply-templates/>
+	</xsl:template>
+
     
     <xd:doc>
         <xd:desc>
@@ -196,22 +220,18 @@
     <xsl:template match="w:r[w:rPr/w:rStyle[@w:val='CommentReference']][not(w:t)]">
         <xsl:apply-templates/>
     </xsl:template>
-    
-        
-    <xsl:template match="w:r" mode="base">
-        <xsl:apply-templates/>
-    </xsl:template>
-
-    <xd:doc>
-        <xd:desc>
-            <xd:p>Process runs of bold text by wrapping the text in a db:emphasis element.</xd:p>
-        </xd:desc>
-    </xd:doc>
-    <xsl:template match="w:r[w:rPr/w:b]">
-        <emphasis role="bold">
-            <xsl:apply-templates select="." mode="base"/>
-        </emphasis>
-    </xsl:template>
+	
+	
+	<xd:doc>
+		<xd:desc>
+			<xd:p>Process a run of text that contains an image as an inline (block images handled earlier)</xd:p>
+		</xd:desc>
+	</xd:doc>
+	
+	<xsl:template match="w:r[descendant::w:drawing]">
+		<xsl:apply-templates select="descendant::w:drawing"/>
+	</xsl:template>
+	
 
     <xd:doc>
         <xd:desc>
@@ -220,12 +240,12 @@
     </xd:doc>
     
     <!-- don't output the run in which an endnote occurs, skip to the note -->
-    <xsl:template match="w:r[w:endnoteReference]">
+    <xsl:template match="w:r[w:endnoteReference]"  priority="1">
         <xsl:apply-templates select="w:endnoteReference"/>
     </xsl:template>
     
     <!-- don't output the run in which an footnote occurs, skip to the note -->
-    <xsl:template match="w:r[w:footnoteReference]">
+    <xsl:template match="w:r[w:footnoteReference]" priority="1">
         <xsl:apply-templates select="w:footnoteReference"/>
     </xsl:template>
 
@@ -263,33 +283,6 @@
 
     <xd:doc>
         <xd:desc>
-            <xd:p>Process runs of italicised text by wrapping that text in a emphasis
-                element.</xd:p>
-        </xd:desc>
-    </xd:doc>
-    <xsl:template match="w:r[w:rPr/w:i]">
-        <emphasis role="italic">
-            <xsl:apply-templates select="." mode="base"/>
-        </emphasis>
-    </xsl:template>
-
-    <xd:doc>
-        <xd:desc>
-            <xd:p>Process runs of bold and italicised text by wrapping the text in two emphasis
-                elements.</xd:p>
-        </xd:desc>
-    </xd:doc>
-    <xsl:template match="w:r[w:rPr/w:i and w:rPr/w:b]">
-        <emphasis role="italic">
-            <emphasis role="bold">
-                <xsl:apply-templates select="." mode="base"/>
-            </emphasis>
-        </emphasis>
-    </xsl:template>
-
-
-    <xd:doc>
-        <xd:desc>
             <xd:p>Process text elements by outputting them as long as they aren't empty text.</xd:p>
         </xd:desc>
     </xd:doc>
@@ -299,25 +292,47 @@
 
     <xd:doc>
         <xd:desc>
-            <xd:p>Handle <xd:b>a:blip</xd:b> elements. Convert them to a DocBook imageobject
+            <xd:p>Handle <xd:b>w:drawing</xd:b> elements. We only handle those with a:blip children.
+            	Convert them to a DocBook imageobject
                 element. The fileRef attribute is filled with the relation ID. Later processing can
                 replace that with the actual URL from document.rels.xml</xd:p>
+    
         </xd:desc>
     </xd:doc>
-    <xsl:template match="a:blip">
+	
+	<xsl:template match="w:drawing">
+		<xsl:message terminate="yes">Encountered a w:drawing with no descendant a:blip</xsl:message>
+	</xsl:template>
+	
+	<xsl:template match="w:drawing[descendant::a:blip]">
+		<xsl:apply-templates select="descendant::a:blip"/>
+	</xsl:template>
+	
+    <xsl:template match="a:blip" mode="block">
         <mediaobject xml:id="{generate-id()}">
             <imageobject>
                 <xsl:apply-templates select="@r:link|@r:embed"/>
             </imageobject>
         </mediaobject>
     </xsl:template>
+	
+	<xsl:template match="a:blip">
+		<inlinemediaobject xml:id="{generate-id()}">
+			<imageobject>
+				<xsl:apply-templates select="@r:link|@r:embed"/>
+			</imageobject>
+		</inlinemediaobject>
+	</xsl:template>
 
     <xsl:template match="a:blip/@r:embed|a:blip/@r:link">
         <!-- generate a docbook imdagedata element based on this. -->
         <xsl:variable name="id" select="."/>
+    	
+    	<xsl:variable name="relindex" select="if (ancestor::w:footnote) then 2 else if (ancestor::w:endnote) then 3 else 1"/>
+    	<xsl:variable name="rels" select="//rp:Relationships[$relindex]"/>
 
         <imagedata>
-            <xsl:variable name="doc-image-uri" select="//rp:Relationships/rp:Relationship[@Id = $id]/@Target"/>
+            <xsl:variable name="doc-image-uri" select="$rels/rp:Relationship[@Id = $id]/@Target"/>
             <xsl:analyze-string select="$doc-image-uri" regex=".+/([^/]+)$/">
                 <xsl:matching-substring>
                     <xsl:attribute name="fileref"
@@ -381,19 +396,48 @@
     </xd:doc>
     <xsl:template name="cword:getStyleAsRole">
         <xsl:param name="properties"/>
-        <xsl:variable name="style" select="$properties/w:rStyle/@w:val|$properties/w:pStyle/@w:val"/>
-
-        <xsl:choose>
-            <xsl:when test="$style = ('attributes', 'CommentReference', 'FootnoteText', 'EndnoteText')"/>
-            <xsl:when test="$style">
-                <xsl:attribute name="role">
-                    <xsl:value-of select="$style"/>
-                </xsl:attribute>
-            </xsl:when>
-        </xsl:choose>
+    	<xsl:attribute name="role" select="cword:getStyle($properties)"/>
     </xsl:template>
+	
+	<xsl:function name="cword:getStyle" as="xs:string">
 
+		<xsl:param name="properties"/>
+		<xsl:variable name="style" select="($properties/w:rStyle/@w:val, $properties/w:pStyle/@w:val)[1]"/>
+		<xsl:value-of select="if ($style = ('attributes', 'CommentReference', 'FootnoteText', 'EndnoteText')) then '' else $style"/>
+		
+	</xsl:function>
+	
 
+	<xsl:function name="cword:isBold" as="xs:boolean">
+		
+		<xsl:param name="run"/>
+		<xsl:value-of select="if ($run/w:rPr/w:b) then true() else false()"/>
+		
+	</xsl:function>
+
+	<xsl:function name="cword:isItalic" as="xs:boolean">
+		
+		<xsl:param name="run"/>
+		<xsl:value-of select="if ($run/w:rPr/w:i) then true() else false()"/>
+		
+	</xsl:function>
+	
+	<xsl:function name="cword:isSuperscript" as="xs:boolean">
+		
+		<xsl:param name="run"/>
+		<xsl:value-of select="if ($run/w:rPr/w:vertAlign[@w:val = 'superscript']) then true() else false()"/>
+		
+	</xsl:function>
+	
+	<xsl:function name="cword:isSubscript" as="xs:boolean">
+		
+		<xsl:param name="run"/>
+		<xsl:value-of select="if ($run/w:rPr/w:vertAlign[@w:val = 'subscript']) then true() else false()"/>
+		
+	</xsl:function>
+	
+	
+	
     <xd:doc>
         <xd:desc>
             <xd:p>Skip core properties</xd:p>
@@ -452,7 +496,7 @@
     </xd:doc>
 
     <xsl:template match="w:bookmarkStart[following-sibling::node()[1][self::w:bookmarkEnd]]">
-        <!-- <anchor xml:id="{@w:name}"/> causing problems in xml to html for some reason -->
+        <anchor xml:id="{@w:name}"/>
     </xsl:template>
 
     <xsl:template match="w:bookmarkStart[not(following-sibling::node()[1][self::w:bookmarkEnd])]">
@@ -475,27 +519,47 @@
     </xsl:template>
     
     <xsl:template match="w:hyperlink[@r:id]">
+    	<xsl:variable name="relindex" select="if (ancestor::w:footnote) then 2 else if (ancestor::w:endnote) then 3 else 1"/>
+    	<xsl:variable name="rels" select="//rp:Relationships[$relindex]"/>
         <xsl:variable name="id" select="@r:id"/>
-        <link xlink:href="{//rp:Relationships/rp:Relationship[@Id = $id]/@Target}"><xsl:apply-templates/></link>
+        <link xlink:href="{$rels/rp:Relationship[@Id = $id]/@Target}"><xsl:apply-templates/></link>
     </xsl:template>
 
     <xd:doc>
         <xd:desc>
             <xd:p>Suppress the following:</xd:p>
-            <xd:ul>
-                <xd:li>Breaks</xd:li>
-                <xd:li>Tabs</xd:li>
-                <xd:li>Hard Carriage Returns</xd:li>
-                <xd:li>Annotation Refs</xd:li>
-            </xd:ul>
         </xd:desc>
     </xd:doc>
 
     <xsl:template match="w:br"/>
     <xsl:template match="w:lastRenderedPageBreak"/>
-    <xsl:template match="w:tab"/>
-    <xsl:template match="w:cr"/>
+	
+	<xsl:template match="w:instrText"/>
+	<xsl:template match="w:fldChar"/>
+
     <xsl:template match="w:annotationRef"/>
-    
+	<xsl:template match="w:proofErr"/>
+	<xsl:template match="w:softHyphen">
+		<xsl:comment>SOFT HYPHEN</xsl:comment>
+	</xsl:template>
+	
+	<!-- crappy  handling for objects right now -->
+	<xsl:template match="w:object">
+		<phrase>OBJECT INSERTION</phrase>
+	</xsl:template>
+
+	<!-- convert a tab to a space -->
+	<xsl:template match="w:tab">
+		<xsl:text>&#32;</xsl:text>
+	</xsl:template>
+	
+	<!-- insert an emphasis with a role of break for crs and breaks  -->
+	<xsl:template match="w:cr|w:br[not(@w:type)]">
+		<phrase role="break"/>
+	</xsl:template>
+	
+	
+	
+	
     
 </xsl:stylesheet>

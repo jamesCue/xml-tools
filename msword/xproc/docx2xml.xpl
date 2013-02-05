@@ -60,6 +60,11 @@
                         <revremark>Added comments so we can insert as XML comments into
                         the xml doc.</revremark>
                     </revision>
+                	<revision>
+                		<revnumber>8</revnumber>
+                		<date>2012-10-11</date>
+                		<revremark>Added footnotes.xml.rels and endnotes.xml.rels</revremark>
+                	</revision>
                 </revhistory>
             </info>
             <para>XProc script to unzip a word docx document, extract metadata and convert to
@@ -74,7 +79,7 @@
 
     <p:option name="package-url" required="true"/>
 
-    <p:import href="library-1.0.xpl"/>
+	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
 
 
@@ -209,7 +214,28 @@
         <p:with-option name="archive" select="$package-url"/>
         <p:with-option name="doc" select="'word/_rels/document.xml.rels'"/>
     </corbas:get-doc-from-archive>
-    
+	
+	<corbas:get-doc-from-archive name="get-footnote-relationships">
+		<p:input port="fallback">
+			<p:inline>
+				<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>
+			</p:inline>
+		</p:input>
+		<p:with-option name="archive" select="$package-url"/>
+		<p:with-option name="doc" select="'word/_rels/footnotes.xml.rels'"/>
+	</corbas:get-doc-from-archive>
+
+	<corbas:get-doc-from-archive name="get-endnote-relationships">
+		<p:input port="fallback">
+			<p:inline>
+				<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>
+			</p:inline>
+		</p:input>
+		<p:with-option name="archive" select="$package-url"/>
+		<p:with-option name="doc" select="'word/_rels/endnotes.xml.rels'"/>
+	</corbas:get-doc-from-archive>
+	
+	
     <corbas:get-doc-from-archive name="get-comments">
         <p:input port="fallback">
             <p:inline>
@@ -230,6 +256,8 @@
             <p:pipe port="result" step="get-app-properties"/>
             <p:pipe port="result" step="get-core-properties"/>
             <p:pipe port="result" step="get-relationships"/>
+        	<p:pipe port="result" step="get-footnote-relationships"/>
+        	<p:pipe port="result" step="get-endnote-relationships"/>
             <p:pipe port="result" step="get-comments"/>
         </p:input>
     </p:identity>

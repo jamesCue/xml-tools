@@ -1,0 +1,8 @@
+#!/bin/sh
+
+ROOT=/Users/nicg/Projects/xmltools/msword/
+
+DOCX=`path-to-uri $1`
+SCRIPT=$ROOT/xproc/word2db.xpl
+
+calabash $SCRIPT package-url="$DOCX"

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	ns="http://www.corbas.co.uk/ns/transforms/data"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+	<start>
+		<ref name="manifest"></ref>
+	</start>
+	<define name="manifest">
+		<element name="manifest">
+		<oneOrMore>
+			<ref name="item"/>
+		</oneOrMore>
+		</element>
+	</define>
+	
+	<define name="item">
+		<element name="item">
+			<optional>
+				<attribute name="href">
+					<data type="anyURI"/>
+				</attribute>
+			</optional>
+		</element>
+	</define>
+	
+</grammar>
