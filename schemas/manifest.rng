@@ -1,28 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar 
-	xmlns="http://relaxng.org/ns/structure/1.0"
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
 	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
 	ns="http://www.corbas.co.uk/ns/transforms/data"
 	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 	<start>
-		<ref name="manifest"></ref>
+		<ref name="manifest"/>
 	</start>
+	
 	<define name="manifest">
 		<element name="manifest">
-		<oneOrMore>
-			<ref name="item"/>
-		</oneOrMore>
-		</element>
-	</define>
-	
-	<define name="item">
-		<element name="item">
+			<oneOrMore>
+				<ref name="item"/>
+			</oneOrMore>
 			<optional>
-				<attribute name="href">
-					<data type="anyURI"/>
-				</attribute>
+				<ref name="xml.base"/>
+			</optional>
+			<optional>
+				<ref name="xml.id"/>
 			</optional>
 		</element>
 	</define>
+
+
+	<define name="item">
+		<element name="item">
+			<attribute name="href">
+				<data type="anyURI"/>
+			</attribute>
+			<optional>
+				<ref name="xml.base"/>
+			</optional>
+			<optional>
+				<ref name="xml.id"/>
+			</optional>
+		</element>
+	</define>
+
+	<define name="xml.id">
+		<attribute name="xml:id">
+			<a:documentation><para xmlns="http://docbook.org/ns/docbook">Identifies the unique ID value of the element</para></a:documentation>
+			<data type="ID"/>
+		</attribute>
+	</define>
 	
+	<define name="xml.base">
+		<attribute name="xml:base">
+			<a:documentation><para xmlns="http://docbook.org/ns/docbook">Specifies the base URI of the element and its
+				descendants</para></a:documentation>
+			<data type="anyURI"/>
+		</attribute>
+	</define>
+	
+
 </grammar>

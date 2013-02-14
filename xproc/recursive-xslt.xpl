@@ -6,10 +6,9 @@
 
 		<p:documentation>
 			<p xmlns="http:/wwww.w3.org/1999/xhtml">This step takes a sequence of transformation
-				elements and executes them recursively
-				applying the each stylesheet to the result of the previous stylesheet. The final
-				result is the result of applying all the stylesheets in turn to the input
-				document.</p>
+				elements and executes them recursively applying the each stylesheet to the result of
+				the previous stylesheet. The final result is the result of applying all the
+				stylesheets in turn to the input document.</p>
 		</p:documentation>
 
 		<p:input port="source" sequence="false" primary="true">
@@ -32,6 +31,8 @@
 					document.</p>
 			</p:documentation>
 		</p:output>
+	
+		<p:option name="counter" select="number(0)"/>		<!-- used for debug -->
 
 		<!-- Split of the first transformation from the sequence -->
 		<p:split-sequence name="split-stylesheets" initial-only="true" test="position()=1">
@@ -39,6 +40,8 @@
 				<p:pipe port="stylesheets" step="recursive-xslt"/>
 			</p:input>
 		</p:split-sequence>
+
+
 
 		<!-- How many of these are left? We actually only care to know  if there are *any* hence the limit. -->
 		<p:count name="count-remaining-transformations" limit="1">
@@ -50,7 +53,7 @@
 		<!-- Ignore the result for now -->
 		<p:sink/>
 
-		<p:xslt>
+		<p:xslt name="run-single-xslt">
 			<p:input port="source">
 				<p:pipe port="source" step="recursive-xslt"/>
 			</p:input>
@@ -61,17 +64,26 @@
 				<p:empty/>
 			</p:input>
 		</p:xslt>
+		
+		<p:store>
+			<p:input port="source">
+				<p:pipe port="result" step="run-single-xslt"/>
+			</p:input>
+			<p:with-option name="href" select="concat('/tmp/', $counter, '.xml')"/>
+		</p:store>
 
 		<!-- If there are any remaining stylesheets recurse. The primary
     	input is the result of our XSLT and the remaining
     	sequence from split-transformations above will be the 
     	transformation sequence 
-   	-->
-		<p:choose>
+   		-->
+		<p:choose name="determine-recursion">
 
 			<p:xpath-context>
 				<p:pipe port="result" step="count-remaining-transformations"/>
 			</p:xpath-context>
+			
+			
 
 			<!-- If we have any transformations remaining recurse -->
 			<p:when test="number(c:result)>0">
@@ -81,6 +93,12 @@
 					<p:input port="stylesheets">
 						<p:pipe port="not-matched" step="split-stylesheets"/>
 					</p:input>
+					
+					<p:input port="source">
+						<p:pipe port="result" step="run-single-xslt"/>
+					</p:input>
+					
+					<p:with-option name="counter" select="number($counter) + 1"/>
 
 				</ccproc:recursive-xslt>
 
@@ -89,41 +107,18 @@
 			<!-- Otherwise, pass the output of our transformation back as the result -->
 			<p:otherwise>
 
-				<p:identity/>
+				<p:identity>
+					<p:input port="source">
+						<p:pipe port="result" step="run-single-xslt"/>
+					</p:input>
+				</p:identity>
 
 			</p:otherwise>
 
 		</p:choose>
 
 	</p:declare-step>
-	
-	<p:declare-step type="ccproc:logged-transformation" name="logged-transformation">
-		
-		
-		<p:documentation>
-			<p xmlns="http:/wwww.w3.org/1999/xhtml">This step is used by the 
-			recursive-xslt step to execute and log transformations.</p>
-		</p:documentation>
-		
-		<p:input primary="true" port="source">
-			<p:documentation>
-				<p xmlns="http://www.w3.org/1999/xhtml">The primary input for the step is the
-					document to be transformed.</p>
-			</p:documentation>			
-		</p:input>
-		
-		<p:input port="transformation">
-			<p:documentation>
-				<p xmlns="http://www.w3.org/1999/xhtml">The secondary input for the step is
-				a <code>transformation element</code> as defined in <a href="docxconv.rnc">docxconv.rnc</a>.
-				Note that the elements are flattened, groups removed and defaults made explicit before this
-				step so the input transformation must have all relevant attributes (including ancestral
-				logging attributes).</p>
-			</p:documentation>
-		</p:input>
-		
-		
-		
-	</p:declare-step>
+
+
 
 </p:library>

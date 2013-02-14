@@ -719,10 +719,6 @@
             <file name="../aimer/ILO/xslt/word-to-docbook/migrate-footnotes.xsl"/>
             <file name="../aimer/ILO/xslt/fo/structural-overrides.xsl"/>
         </folder>
-        <folder path="../../../../private/tmp/"/>
-        <folder path="../aimer/ILO/"/>
         <folder path="."/>
-        <file name="../aimer/ILO/xml/en.fo"/>
-        <file name="test-eqn.docx"/>
     </projectTree>
 </project>

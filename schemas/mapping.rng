@@ -80,21 +80,33 @@
 					<param name="minLength">1</param>
 				</data>
 			</attribute>
-			<optional>
-				<attribute name="target-element">
-					<data type="Name">
-						<param name="minLength">1</param>
-					</data>
-				</attribute>
-			</optional>
-			<optional>
-				<attribute name="target-class">
-					<data type="string">
-						<param name="minLength">1</param>
-					</data>
-				</attribute>
-			</optional>
+			
+			<choice>
+				<ref name="target-class"/>
+				<ref name="target-element"/>
+				<group>
+					<ref name="target-element"/>
+					<ref name="target-class"/>
+				</group>
+			</choice>
+
 		</element>
+	</define>
+	
+	<define name="target-class">
+		<attribute name="target-class">
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+		</attribute>		
+	</define>
+	
+	<define name="target-element">
+		<attribute name="target-element">
+			<data type="Name">
+				<param name="minLength">1</param>
+			</data>
+		</attribute>	
 	</define>
 
 </grammar>

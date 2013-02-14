@@ -14,12 +14,21 @@
 	
 	<xsl:param name="match-element" select="'para'"/>
 	<xsl:param name="match-namespace" select="'http://docbook.org/ns/docbook'"/>
+	<xsl:param name="output-namespace" select="$match-namespace"/>
 	<xsl:param name="match-attribute" select="'role'"/>
 	
 	<xsl:template match="/">
 		<axsl:stylesheet xpath-default-namespace="{$match-namespace}" version="2.0">
 			<axsl:output method="xml" encoding="UTF-8"/>
+			
+			<axsl:template match="@*|node()">
+				<axsl:copy>
+					<axsl:apply-templates select="@*|node()"/>
+				</axsl:copy>
+			</axsl:template>
+			
 			<xsl:apply-templates/>						
+			
 		</axsl:stylesheet>
 	</xsl:template>
 	
@@ -88,7 +97,7 @@
 			
 			<xsl:otherwise>
 				
-				<xsl:element name="{$element-list[1]}">
+				<xsl:element name="{$element-list[1]}" namespace="{$output-namespace}">
 					
 					<xsl:if test="$top-level = true()">
 						<xsl:apply-templates select="@hint|@heading-level"/>

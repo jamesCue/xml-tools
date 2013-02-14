@@ -10,9 +10,15 @@
 	<!-- easily accessible identity transform -->
 	<uriSuffix uriSuffix="identity.xslt" uri="xslt/identity.xsl"/>
 	<uriSuffix uriSuffix="identity.xsl" uri="xslt/identity.xsl"/>
+	<uriSuffix uriSuffix="build-mapping-stylesheet.xsl" uri="msword/xslt/build-mapping-stylesheet.xsl"/>
 	
 	<!-- XProc scripts -->
 	<uriSuffix uriSuffix="store-identity.xpl" uri="xproc/store-identity.xpl"/>
-	<uriSuffix uriSuffix="stylesheet-runner.xpl" uri="xproc/stylesheet-runner.xpl"/>	
+	<uriSuffix uriSuffix="stylesheet-runner.xpl" uri="xproc/stylesheet-runner.xpl"/>
+	<uriSuffix uriSuffix="load-sequence-from-file.xpl" uri="xproc/load-sequence-from-file.xpl"/>
+	<uriSuffix uriSuffix="recursive-xslt.xpl" uri="xproc/recursive-xslt.xpl"/>	
+	
+	<uriSuffix uriSuffix="docx2xml.xpl" uri="msword/xproc/docx2xml.xpl"/>
+	
 	
 </catalog>
