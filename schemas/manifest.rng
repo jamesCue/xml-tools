@@ -3,11 +3,24 @@
 	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
 	ns="http://www.corbas.co.uk/ns/transforms/data"
 	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+	
+	<a:documentation>
+		<p xmlns="http://www.w3.org/1999/xhtml">Manifest documents represent lists of files to 
+		be used by a process within the XSLT pipeline. For an example of this usage, look at
+		<code>load-sequence-from-file.xpl</code> where a manifest is used to load a sequence
+		of XML files as an XProc step.</p>
+	</a:documentation>
 	<start>
 		<ref name="manifest"/>
 	</start>
 	
 	<define name="manifest">
+		<a:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">manifest elements are the root of the manifest
+			document. The contain one or more item elements used to represent a file to be processed
+			in some manner. The xml:base attribute can be used to override the base URI for the
+			item elements.</p>
+		</a:documentation>
 		<element name="manifest">
 			<oneOrMore>
 				<ref name="item"/>
@@ -23,6 +36,12 @@
 
 
 	<define name="item">
+		<a:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">item elements are file containers. Each
+				element references a single external file to be used for some purpose. 
+				The xml:base attribute can be used to override the base URI for this specific
+				element allowing a manifest to contain elements from multiple locations.</p>
+		</a:documentation>
 		<element name="item">
 			<attribute name="href">
 				<data type="anyURI"/>

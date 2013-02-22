@@ -24,8 +24,10 @@
 			and return a sequence of the files in the order they were contained in the
 			input file. The input file should validate against <filename>manifest.rng</filename>.
 			The <tag class="attribute">href</tag> attribute of each <tag class="element">item</tag> element is used to
-			identify the files to be loaded. The file names are resolved agains the base uri of the manifest file. 			
+			identify the files to be loaded. The file names are resolved agains the base uri of the manifest file (or
+			their own base if overridden via <tag class="attribute">xml:base</tag>.
 			</para>
+
 		</section>
 	</p:documentation>
 	
@@ -45,6 +47,9 @@
     	<p:pipe port="result" step="load-iterator"></p:pipe>
     </p:output>
 	
+	<!-- Loop over input and load each file in turn. 
+		We don't handle errors here because the default behaviour (exit with error)
+		is the desired behaviour and the error message is just fine -->
 	<p:for-each name="load-iterator">
 		
 		<p:output port="result" primary="true"/>

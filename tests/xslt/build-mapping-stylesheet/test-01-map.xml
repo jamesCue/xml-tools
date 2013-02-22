@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	
+	Word style to DocBook element mapping. Can be used to handle all simple paragraph cases.
+	The map element should contain a set of mapping elements. Each element must map a 
+	docbook role style to one or more html elements (in a space separated list). The leftmost
+	element is the outermost when converted to html. Roles are also mapped to styles.
+	
+
+	
+-->
+
+<?xml-model href="../../../schemas/mapping.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<map xmlns="http://www.corbas.co.uk/ns/transforms/data" ns="http://docbook.org/ns/docbook"
+	source-attribute="role" source-element="para">
+
+	<mapping source-value="01FMTPTitle" target-element="title" hint="doc-title" heading-level="0"/>
+	<mapping source-value="01FMTPSubtitle" target-element="subtitle" hint="doc-title"/>
+
+	<mapping source-value="01FMHead" target-element="title" hint="prelims-title" heading-level="2"/>
+	<mapping source-value="01FMTPAuthor" target-element="author personname" hint="doc-author"/>
+	<mapping source-value="01FMDediBody" target-element="dedication para"/>
+
+	<mapping source-value="01FMAboutAuthorTitle" target-element="title" hint="prelims-title"
+		heading-level="2"/>
+	<mapping source-value="01FMbythesameauthorHead" target-element="title" hint="prelims-title"
+		heading-level="2"/>
+	<mapping source-value="01FMAcknowledgementsHead" target-element="title" hint="prelims-title"
+		heading-level="2"/>
+
+	<mapping source-value="01FMDediBody" target-element="dedication para"/>
+
+
+
+	<mapping source-value="02PartTitle" target-element="title" hint="part-title" heading-level="1"/>
+	<mapping source-value="02PartNumber" target-element="title" hint="part-number" heading-level="1"/>
+	<mapping source-value="02PartTitleSubtitle" target-element="subtitle" hint="part-title"/>
+
+	<mapping source-value="03ChapterNumberandTitle" target-element="title" hint="chapter-title"
+		heading-level="2"/>
+	<mapping source-value="03ChapterNumber" target-element="title" hint="chapter-number"
+		heading-level="2"/>
+	<mapping source-value="03ChapterTitle" target-element="title" hint="chapter-title"
+		heading-level="2"/>
+	<mapping source-value="03ChapterTitleSubtitle" target-element="subtitle" hint="chapter-title"/>
+
+	<mapping source-value="05HeadA" target-element="title" hint="A-Head" heading-level="3"/>
+	<mapping source-value="05HeadB" target-element="title" hint="B-Head" heading-level="4"/>
+	<mapping source-value="05HeadC" target-element="title" hint="C-Head" heading-level="5"/>
+
+	<mapping source-value="01FMEpigraph" target-element="epigraph para"/>
+	<mapping source-value="01FMEpigraphFL" target-element="epigraph para"/>
+	<mapping source-value="01EpigraphVerse" target-element="epigraph para"/>
+	<mapping source-value="02PartEpigraphVerse" target-element="epigraph para"/>
+	<mapping source-value="03ChapterEpigraph" target-element="epigraph para"/>
+	<mapping source-value="03ChapterEpigraphVerse" target-element="epigraph attribution"/>
+
+	<mapping source-value="01FMEpigraphSource" target-element="epigraph attribution"/>
+	<mapping source-value="02PartEpigraphSource" target-element="epigraph attribution"/>
+	<mapping source-value="03ChapterEpigraphSource" target-element="epigraph attribution"/>
+
+	<mapping source-value="12Caption" target-element="caption para"/>
+
+	<mapping source-value="06ProseExtract" target-element="blockquote para"/>
+	<mapping source-value="06ProseExtractFirst" target-element="blockquote para"/>
+
+	<mapping source-value="normal" target-element="para"/>
+
+	<mapping source-value-prefix="01FMContent" target-element="para" suppress="true"/>
+
+</map>
