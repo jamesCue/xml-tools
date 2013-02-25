@@ -9,9 +9,13 @@
 				elements and executes them recursively applying the each stylesheet to the result of
 				the previous stylesheet. The final result is the result of applying all the
 				stylesheets in turn to the input document.</p>
+			<p xmlns="http:/wwww.w3.org/1999/xhtml">If secondary outputs are generated, the result
+				of this pipeline will be a sequence of result documents. At each stage of the
+				pipeline a sequence is created consisting of the primary and secondary outputs of
+				the xslt step. This is then iterated over and recursed through.</p>
 		</p:documentation>
 
-		<p:input port="source" sequence="false" primary="true">
+		<p:input port="source" sequence="true" primary="true">
 			<p:documentation>
 				<p xmlns="http://www.w3.org/1999/xhtml">The primary input for the step is the
 					document to be transformed.</p>
@@ -25,14 +29,20 @@
 			</p:documentation>
 		</p:input>
 
-		<p:output port="result" primary="true">
+		<p:input port="parameters" kind="parameter" primary="true">
+			<p:documentation>
+				<p xmlns="http:/www.w3.org/1999/xhtml">The parameters to be passed to the p:xslt
+					steps.</p>
+			</p:documentation>
+		</p:input>
+
+		<p:output port="result" primary="true" sequence="true">
 			<p:documentation>
 				<p xmlns="http://www.w3.org/1999/xhtml">The output of the step is the transformed
 					document.</p>
 			</p:documentation>
 		</p:output>
-	
-		<p:option name="counter" select="number(0)"/>		<!-- used for debug -->
+
 
 		<!-- Split of the first transformation from the sequence -->
 		<p:split-sequence name="split-stylesheets" initial-only="true" test="position()=1">
@@ -40,8 +50,6 @@
 				<p:pipe port="stylesheets" step="recursive-xslt"/>
 			</p:input>
 		</p:split-sequence>
-
-
 
 		<!-- How many of these are left? We actually only care to know  if there are *any* hence the limit. -->
 		<p:count name="count-remaining-transformations" limit="1">
@@ -52,25 +60,35 @@
 
 		<!-- Ignore the result for now -->
 		<p:sink/>
-
-		<p:xslt name="run-single-xslt">
+		
+		<!-- Make the step input the current primary -->
+		<p:identity name="force-current-primary">
 			<p:input port="source">
 				<p:pipe port="source" step="recursive-xslt"/>
 			</p:input>
-			<p:input port="stylesheet">
-				<p:pipe port="matched" step="split-stylesheets"/>
-			</p:input>
-			<p:input port="parameters">
-				<p:empty/>
-			</p:input>
-		</p:xslt>
+		</p:identity>
+
+		<p:for-each name="iterate-over-input">
+			
+			<p:output port="result" primary="true" sequence="true"/>
+			<p:output port="secondary" primary="false" sequence="true">
+				<p:pipe port="secondary" step="run-single-xslt"/>
+			</p:output>
+
+			<p:xslt name="run-single-xslt">
+				<p:input port="stylesheet">
+					<p:pipe port="matched" step="split-stylesheets"/>
+				</p:input>
+			</p:xslt>
+
+		</p:for-each>
 		
-		<p:store>
+		<p:identity name="gather-results">
 			<p:input port="source">
-				<p:pipe port="result" step="run-single-xslt"/>
+				<p:pipe port="result" step="iterate-over-input"/>
+				<p:pipe port="secondary" step="iterate-over-input"/>
 			</p:input>
-			<p:with-option name="href" select="concat('/tmp/', $counter, '.xml')"/>
-		</p:store>
+		</p:identity>
 
 		<!-- If there are any remaining stylesheets recurse. The primary
     	input is the result of our XSLT and the remaining
@@ -82,8 +100,8 @@
 			<p:xpath-context>
 				<p:pipe port="result" step="count-remaining-transformations"/>
 			</p:xpath-context>
-			
-			
+
+
 
 			<!-- If we have any transformations remaining recurse -->
 			<p:when test="number(c:result)>0">
@@ -93,12 +111,10 @@
 					<p:input port="stylesheets">
 						<p:pipe port="not-matched" step="split-stylesheets"/>
 					</p:input>
-					
+
 					<p:input port="source">
-						<p:pipe port="result" step="run-single-xslt"/>
+						<p:pipe port="result" step="gather-results"/>
 					</p:input>
-					
-					<p:with-option name="counter" select="number($counter) + 1"/>
 
 				</ccproc:recursive-xslt>
 
@@ -109,7 +125,7 @@
 
 				<p:identity>
 					<p:input port="source">
-						<p:pipe port="result" step="run-single-xslt"/>
+						<p:pipe port="result" step="iterate-over-input"/>
 					</p:input>
 				</p:identity>
 
