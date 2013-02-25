@@ -47,6 +47,9 @@
 				<data type="anyURI"/>
 			</attribute>
 			<optional>
+				<ref name="sequence"/>
+			</optional>
+			<optional>
 				<ref name="xml.base"/>
 			</optional>
 			<optional>
@@ -70,5 +73,12 @@
 		</attribute>
 	</define>
 	
+	<define name="sequence">
+		<attribute name="sequence">
+			<a:documentation><p xmlns="http://www.w3.org/1999/xhtml">Set to true if the result of the stylesheet is sequence. Assumed to
+			default to false.</p></a:documentation>
+			<data type="boolean"/>
+		</attribute>
+	</define>
 
 </grammar>

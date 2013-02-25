@@ -11,13 +11,13 @@
 			converting Word paras to paragraphs in the output language. This mechanism is then used
 			to convert the paragraphs to more appropriate elements based on the original word style
 			(which must be retained in an attribute).</p>
-		<p xmlns="http://www.w3.org/1999/xhtml">The map element contains a list of mappings. The map defines the name of the element to
-			be examined and the name of the attribute that will contain the mapping values. It also
-			identifies the namespace of the input language. The output is assumed to be in the same
-			namespace as the input. </p>
-		<p xmlns="http://www.w3.org/1999/xhtml">Copyright Corbas Consulting Ltd 2013. <a rel="license"
-				href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img
-					alt="Creative Commons License" style="border-width:0"
+		<p xmlns="http://www.w3.org/1999/xhtml">The map element contains a list of mappings. The map
+			defines the name of the element to be examined and the name of the attribute that will
+			contain the mapping values. It also identifies the namespace of the input language. The
+			output is assumed to be in the same namespace as the input. </p>
+		<p xmlns="http://www.w3.org/1999/xhtml">Copyright Corbas Consulting Ltd 2013. <a
+				rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"
+					><img alt="Creative Commons License" style="border-width:0"
 					src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"/></a><br/>This work
 			is licensed under a <a rel="license"
 				href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons
@@ -53,33 +53,35 @@
 					<code class="attribute">target-attribute-value</code> attribute).</p>
 		</documentation>
 		<element name="map">
-			
+
 			<attribute name="ns">
 				<data type="anyURI">
 					<param name="minLength">1</param>
 				</data>
 			</attribute>
-			
+
 			<attribute name="source-element">
-				<data type="Name">
+				<data type="string">
+					<!-- regular expression matches an NCName or a literal asterisk -->
+					<param name="pattern">([\i-[:]][\c-[:]]*)|\*</param>
 					<param name="minLength">1</param>
 				</data>
 			</attribute>
-			
+
 			<attribute name="source-attribute">
 				<data type="Name">
 					<param name="minLength">1</param>
 				</data>
 			</attribute>
-			
+
 			<optional>
 				<attribute name="target-attribute">
 					<data type="Name">
 						<param name="minLength">1</param>
-					</data>					
+					</data>
 				</attribute>
 			</optional>
-			
+
 			<oneOrMore>
 				<ref name="mapping"/>
 			</oneOrMore>
@@ -121,74 +123,125 @@
 					used as input to a transformation that adds the desired structure to the
 					XML.</dd>
 				<dt>target-attribute-value</dt>
-				<dd>This attribute is used in conjunction with the optional <code class='attribute'>target-attribute</code>
-				attribute on the <code class="element">map</code> element to insert a new attribute with the
-				given value on to the outermost generated element.</dd>
+				<dd>This attribute is used in conjunction with the optional <code class="attribute"
+						>target-attribute</code> attribute on the <code class="element">map</code>
+					element to insert a new attribute with the given value on to the outermost
+					generated element.</dd>
 			</dl>
 		</documentation>
+
 		<element name="mapping">
+
+			<ref name="source-value-options"/>
+
 			<choice>
-				<attribute name="source-value">
 
-					<data type="string">
-						<param name="minLength">1</param>
-					</data>
-				</attribute>
-				<attribute name="source-value-prefix">
-					<data type="string">
-						<param name="minLength">1</param>
-					</data>
+				<optional>
+					<ref name="suppress"/>
+				</optional>
 
-				</attribute>
-				<attribute name="source-value-suffix">
-					<data type="string">
-						<param name="minLength">1</param>
-					</data>
 
-				</attribute>
+				<interleave>
+					<choice>
+						<interleave>
+							<ref name="target-element"/>
 
+							<optional>
+								<ref name="target-attribute-value"/>
+							</optional>
+
+						</interleave>
+
+
+						<ref name="target-attribute-value"/>
+					</choice>
+
+					<optional>
+						<ref name="heading-level"/>
+					</optional>
+
+					<optional>
+						<ref name="hint"/>
+					</optional>
+				</interleave>
 			</choice>
-
-			<optional>
-				<!-- The stylesheet processing mappings assumes this defaults to false -->
-				<attribute name="suppress">
-					<data type="boolean"/>
-				</attribute>
-			</optional>
-
-			<attribute name="target-element">
-				<data type="NMTOKENS">
-					<param name="minLength">1</param>
-				</data>
-
-			</attribute>
-
-			<optional>
-				<attribute name="heading-level">
-					<data type="int">
-						<param name="minInclusive">0</param>
-					</data>
-				</attribute>
-			</optional>
-
-			<optional>
-				<attribute name="hint">
-					<data type="string">
-						<param name="minLength">1</param>
-					</data>
-				</attribute>
-			</optional>
-			
-			<optional>
-				<attribute name="target-attribute-value">
-					<data type="string">
-						<param name="minLength">1</param>
-					</data>					
-				</attribute>
-			</optional>
 
 		</element>
 	</define>
 
+
+	<define name="source-value">
+		<attribute name="source-value">
+
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+		</attribute>
+	</define>
+
+	<define name="source-value-prefix">
+		<attribute name="source-value-prefix">
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+		</attribute>
+	</define>
+
+	<define name="source-value-suffix">
+		<attribute name="source-value-suffix">
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+
+		</attribute>
+	</define>
+
+	<define name="source-value-options">
+		<choice>
+			<ref name="source-value"/>
+			<ref name="source-value-suffix"/>
+			<ref name="source-value-prefix"/>
+		</choice>
+	</define>
+
+	<define name="suppress">
+		<!-- The stylesheet processing mappings assumes this defaults to false -->
+		<attribute name="suppress">
+			<data type="boolean"/>
+		</attribute>
+	</define>
+
+	<define name="target-element">
+		<attribute name="target-element">
+			<data type="NMTOKENS">
+				<param name="minLength">1</param>
+			</data>
+		</attribute>
+	</define>
+
+	<define name="heading-level">
+		<attribute name="heading-level">
+			<data type="int">
+				<param name="minInclusive">0</param>
+			</data>
+		</attribute>
+	</define>
+
+	<define name="hint">
+		<attribute name="hint">
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+		</attribute>
+
+	</define>
+
+	<define name="target-attribute-value">
+		<attribute name="target-attribute-value">
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+		</attribute>
+	</define>
 
 </grammar>
