@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+	HTML Map. Allows HTML and 
+	
+-->
+<?xml-model href="mapping.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<map xmlns="http://www.corbas.co.uk/ns/transforms/data" ns="http://www.w3.org/1999/xhtml" source-attribute="class" source-element="*" target-attribute="class">
+	<mapping source-value="01FMAboutAuthorTitle" target-attribute-value="EB07SmallCapsMediumHead" target-element="h5"/>
+	<mapping source-value="01FMBiographyFL" target-attribute-value="EB02BodyTextFullOut" target-element="p"/>
+	<mapping source-value="01FMDediBody" target-attribute-value="EB02BodyTextFullOut" target-element="p"/>
+	<mapping source-value="01FMEpigraph" target-attribute-value="EB17Epigraph" target-element="p"/>
+	<mapping source-value="01FMEpigraphSource" target-attribute-value="EB18EpigraphSource" target-element="p"/>
+	<mapping source-value="01FMTPAuthor " target-attribute-value="EB09SmallCapsLargeHead" target-element="h2"/>
+	<mapping source-value="01FMTPSubtitle" target-attribute-value="EB11SmallItalicHeadSpaced" target-element="p"/>
+	<mapping source-value="01FMTPTitle" target-attribute-value="EB04MainHead" target-element="h2"/>
+	<mapping source-value="01FMAcknowledgementsHead" target-attribute-value="EB04MainHead" target-element="h2"/>
+	<mapping source-value="01FMHead" target-attribute-value="EB04MainHead" target-element="h2"/>
+	<mapping source-value="03ChapterEpigraph" target-attribute-value="EB17Epigraph" target-element="p"/>
+	<mapping source-value="03ChapterEpigraphSource" target-attribute-value="EB18EpigraphSource" target-element="p"/>
+	<!-- NB need a way to map number and title separately at a later point -->
+	<mapping source-value="03ChapterNumberandTitle" target-attribute-value="EB04MainHeadClosedTitle"
+		target-element="h2"/>
+	<mapping source-value="03ChapterTitle" target-attribute-value="EB04MainHead" target-element="h2"/>
+	<mapping source-value="04BodyText" target-attribute-value="EB03BodyTextIndented" target-element="p"/>
+	<mapping source-value="04BodyTextFL" target-attribute-value="EB02BodyTextFullOut" target-element="p"/>
+	<mapping source-value="05HeadA" target-attribute-value="EB04MainHead2" target-element="h2"/>
+	<mapping source-value="05HeadB" target-attribute-value="EB10SmallHead" target-element="h4"/>
+	<mapping source-value="05HeadC" target-attribute-value="EB11SmallItalicHead" target-element="p"/>
+	<mapping source-value="06ProseExtractFirst" target-attribute-value="EB19ExtraFeatureFullOut" target-element="p"/>
+	<mapping source-value="06Verse" target-attribute-value="poem" target-element="p"/>
+	<mapping source-value="11RecipeIngredients" target-attribute-value="EB22ExtraFeatureFirst" target-element="p"/>
+	<mapping source-value="11RecipeMethodSubhead" target-attribute-value="EB10SmallHead" target-element="h4"/>
+	<mapping source-value="11RecipeServes" target-attribute-value="EB14CopyrightText" target-element="p"/>
+	<mapping source-value="12Caption" target-attribute-value="EB28InlineCaption" target-element="p"/>
+	<mapping source-value="14FootnoteText" target-attribute-value="EB19ExtraFeatureFullOut" target-element="p"/>
+	<mapping source-value="13EMBiblioFL" target-attribute-value="EB26SmallTextHangingIndent" target-element="p"/>
+	<mapping source-value="15Italic" target-attribute-value="EB12SmallItalic"/>
+	<mapping source-value="15Subscript" target-attribute-value="EBsub" target-element="sub"/>
+	<mapping source-value="bold" target-element="strong"/>
+	<mapping source-value="italic" target-element="em"/>
+	<mapping source-value="normal" target-attribute-value="EB03BodyTextIndented" target-element="p"/>
+	<mapping source-value="14FootnoteText" target-attribute-value="EB19ExtraFeatureFullOut" target-element="p"/>
+	<mapping source-value="01FMbythesameauthorHead" target-attribute-value="EB04MainHead" target-element="h2"/>
+	<mapping source-value="01FMbythesameauthorlist" target-attribute-value="EB02BodyTextFullOut" target-element="p"/>
+	<mapping source-value="02PartTitle" target-attribute-value="EB04MainHead" target-element="h2"/>
+	<mapping source-value="13EMHead" target-attribute-value="EB13CopyrightHead" target-element="h5"/>
+	<mapping source-value="13EMEndNotesFL" target-attribute-value="EB14CopyrightText" target-element="p"/>
+	<mapping source-value="04SpaceBreak" target-attribute-value="specialsLastPara" target-element="p"/>
+	<mapping source-value="01FMbythesameauthorname" target-attribute-value="OtherSpecialsAuthor" target-element="p"/></map>

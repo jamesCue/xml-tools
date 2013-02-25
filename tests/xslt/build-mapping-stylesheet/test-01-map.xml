@@ -66,6 +66,6 @@
 
 	<mapping source-value="normal" target-element="para"/>
 
-	<mapping source-value-prefix="01FMContent" target-element="para" suppress="true"/>
+	<mapping source-value-prefix="01FMContent"  suppress="true"/>
 
 </map>

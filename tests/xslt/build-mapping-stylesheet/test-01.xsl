@@ -9,7 +9,7 @@
          <xsl:apply-templates select="@*|node()" mode="#current"/>
       </xsl:copy>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '01FMTPTitle']">
       <title xmlns="http://docbook.org/ns/docbook"
              cword:hint="doc-title"
@@ -26,7 +26,7 @@
          <xsl:apply-templates select="node()"/>
       </subtitle>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '01FMHead']">
       <title xmlns="http://docbook.org/ns/docbook"
              cword:hint="prelims-title"
@@ -56,7 +56,7 @@
          </para>
       </dedication>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '01FMAboutAuthorTitle']">
       <title xmlns="http://docbook.org/ns/docbook"
              cword:hint="prelims-title"
@@ -84,7 +84,7 @@
          <xsl:apply-templates select="node()"/>
       </title>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '01FMDediBody']">
       <dedication xmlns="http://docbook.org/ns/docbook">
          <xsl:apply-templates select="@*[local-name() = 'id']"/>
@@ -95,9 +95,9 @@
          </para>
       </dedication>
    </xsl:template>
-	
-	
-	
+
+
+
 	  <xsl:template match="para[@role = '02PartTitle']">
       <title xmlns="http://docbook.org/ns/docbook"
              cword:hint="part-title"
@@ -123,7 +123,7 @@
          <xsl:apply-templates select="node()"/>
       </subtitle>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '03ChapterNumberandTitle']">
       <title xmlns="http://docbook.org/ns/docbook"
              cword:hint="chapter-title"
@@ -186,7 +186,7 @@
          <xsl:apply-templates select="node()"/>
       </title>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '01FMEpigraph']">
       <epigraph xmlns="http://docbook.org/ns/docbook">
          <xsl:apply-templates select="@*[local-name() = 'id']"/>
@@ -236,7 +236,7 @@
             <xsl:apply-templates select="node()"/>
          </para>
       </epigraph>
-   </xsl:template>	
+   </xsl:template>
 	  <xsl:template match="para[@role = '03ChapterEpigraphVerse']">
       <epigraph xmlns="http://docbook.org/ns/docbook">
          <xsl:apply-templates select="@*[local-name() = 'id']"/>
@@ -247,7 +247,7 @@
          </attribution>
       </epigraph>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '01FMEpigraphSource']">
       <epigraph xmlns="http://docbook.org/ns/docbook">
          <xsl:apply-templates select="@*[local-name() = 'id']"/>
@@ -278,7 +278,7 @@
          </attribution>
       </epigraph>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '12Caption']">
       <caption xmlns="http://docbook.org/ns/docbook">
          <xsl:apply-templates select="@*[local-name() = 'id']"/>
@@ -289,7 +289,7 @@
          </para>
       </caption>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = '06ProseExtract']">
       <blockquote xmlns="http://docbook.org/ns/docbook">
          <xsl:apply-templates select="@*[local-name() = 'id']"/>
@@ -310,7 +310,7 @@
          </para>
       </blockquote>
    </xsl:template>
-	
+
 	  <xsl:template match="para[@role = 'normal']">
       <para xmlns="http://docbook.org/ns/docbook">
          <xsl:apply-templates select="@*[local-name() = 'id']"/>
@@ -318,7 +318,7 @@
          <xsl:apply-templates select="node()"/>
       </para>
    </xsl:template>
-	
+
 	  <xsl:template match="para[starts-with(@role,'01FMContent')]"/>
-	
+
 </xsl:stylesheet>

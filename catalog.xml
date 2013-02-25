@@ -20,5 +20,8 @@
 	
 	<uriSuffix uriSuffix="docx2xml.xpl" uri="msword/xproc/docx2xml.xpl"/>
 	
+	<!-- schemas -->
+	<uriSuffix uriSuffix="mapping.rng" uri="schemas/mapping.rng"/>
+	<uriSuffix uriSuffix="manifest.rng" uri="schemas/manifest.rng"/>
 	
 </catalog>
