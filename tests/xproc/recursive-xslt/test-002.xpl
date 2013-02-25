@@ -21,6 +21,9 @@
 			<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
 				<xsl:template match="/">
 					<wrapper1  xmlns="http://temp.com/"><xsl:copy-of select="*"/></wrapper1>
+					<xsl:result-document href="foo.xml">
+						<wrapper1a xmlns="http://temp.com/"><xsl:copy-of select="*"/></wrapper1a>
+					</xsl:result-document>
 				</xsl:template>
 			</xsl:stylesheet>
 		</p:inline>
@@ -29,8 +32,9 @@
 	<p:input port="ss2">
 		<p:inline>
 			<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+			
 				<xsl:template match="/">
-					<wrapper2  xmlns="http://temp.com/"><xsl:copy-of select="*"/></wrapper2>
+					<wrapper2 xmlns="http://temp.com/"><xsl:copy-of select="*"/></wrapper2>
 				</xsl:template>
 			</xsl:stylesheet>
 		</p:inline>
@@ -53,6 +57,8 @@
 			<p:pipe port="result" step="stylesheets"/>
 		</p:input>
 	</ccproc:recursive-xslt>
+	
+	<p:wrap-sequence wrapper="foo"/>
 	
 	<p:identity/>
 		
