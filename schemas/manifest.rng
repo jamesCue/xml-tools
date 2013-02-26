@@ -5,11 +5,28 @@
 	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 	
 	<a:documentation>
+		<h2  xmlns="http://www.w3.org/1999/xhtml">Manifest Documents</h2>
 		<p xmlns="http://www.w3.org/1999/xhtml">Manifest documents represent lists of files to 
 		be used by a process within the XSLT pipeline. For an example of this usage, look at
 		<code>load-sequence-from-file.xpl</code> where a manifest is used to load a sequence
 		of XML files as an XProc step.</p>
+		<table  xmlns="http://www.w3.org/1999/xhtml">
+			<caption>Change Log</caption>
+			<thead>
+				<tr>
+					<th>Date</th><th>Author</th><th>Change</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>25/02/2013</td>
+					<td>NG</td>
+					<td><ul><li>Removed sequence attribute - will never be used.</li></ul></td>
+				</tr>
+			</tbody>
+		</table>
 	</a:documentation>
+	
 	<start>
 		<ref name="manifest"/>
 	</start>
@@ -47,9 +64,6 @@
 				<data type="anyURI"/>
 			</attribute>
 			<optional>
-				<ref name="sequence"/>
-			</optional>
-			<optional>
 				<ref name="xml.base"/>
 			</optional>
 			<optional>
@@ -73,12 +87,5 @@
 		</attribute>
 	</define>
 	
-	<define name="sequence">
-		<attribute name="sequence">
-			<a:documentation><p xmlns="http://www.w3.org/1999/xhtml">Set to true if the result of the stylesheet is sequence. Assumed to
-			default to false.</p></a:documentation>
-			<data type="boolean"/>
-		</attribute>
-	</define>
 
 </grammar>
