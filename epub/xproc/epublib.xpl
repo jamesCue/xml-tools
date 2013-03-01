@@ -5,19 +5,9 @@
     xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
     version="1.0">
 
-    <!-- 
-        Steps for epub creation (unpackaged) 
-        Create on-disk structures
-        Copy the CSS to css directory (keep a list of CSS files to add to HTML)
-        Copy the images to images directory
-        Generate the XSLT driven content
-        Generate any other content
-            title page
-            cover page
-            imprint page
-        Copy any boilerplate files provided        
-        Create the OPF file
-        Create the NCX file  
+    <!--
+    	Note: currently create-opf and create-ncx are almost identical. However, when the
+    	custom files are added, they will differ.
     -->
 
 	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
@@ -230,6 +220,54 @@
 				<p:pipe port="parameters" step="create-ncx"/>
 			</p:input>
 		</ccproc:recursive-xslt>
+		
+	</p:declare-step>
+	
+	
+	
+	<p:declare-step name="create-opf" type="epub:create-opf">
+		
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">This step executes one or XSLT stylesheets against the
+				input XML to generate the package file. The stylesheets are executed recursively feeding the output
+				from one to the input of the next.</p>
+		</p:documentation>
+		
+		<p:input port="source" primary="true">
+			<p:documentation>
+				<p xmlns="http://www.w3.org/1999/xhtml">The primary input XML document.</p>
+			</p:documentation>
+		</p:input>
+		
+		<p:input port="stylesheets" sequence="true">
+			<p:documentation>
+				<p xmlns="http://www.w3.org/1999/xhtml">A sequence of stylesheets to be executed
+					against the content document.</p>
+			</p:documentation>
+		</p:input>
+		
+		<p:input port="parameters" kind="parameter">
+			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The parameter port is provided
+				with all of the current parameters and main script variables and options.</p></p:documentation>
+		</p:input>
+		
+		<p:output port="result">
+			<p:pipe step="transform-input" port="result"/>
+		</p:output>
+		
+		<!-- Create the OPF file via recursive xslt-->
+		<ccproc:recursive-xslt name="transform-input">
+			<p:input port="stylesheets">
+				<p:pipe port="stylesheets" step="create-ncx"/>
+			</p:input>
+			<p:input port="source">
+				<p:pipe port="source" step="create-ncx"/>
+			</p:input>
+			<p:input port="parameters">
+				<p:pipe port="parameters" step="create-ncx"/>
+			</p:input>
+		</ccproc:recursive-xslt>
+		
 		
 	</p:declare-step>
 
