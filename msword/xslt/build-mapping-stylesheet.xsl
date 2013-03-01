@@ -8,6 +8,8 @@
 	xmlns:doc="http://www.corbas.co.uk/ns/documentation"
 	xmlns="http://www.w3.org/1999/XSL/TransformAlias"
 	exclude-result-prefixes="doc cfunc xsd data axsl" version="2.0">
+	
+	<doc:title>Build Mapping Stylesheet</doc:title>
 
 	<doc:documentation scope="global">
 		<p xmlns="http://www.w3.org/1999/xhtml">This stylesheet is used to read a mapping file (as
