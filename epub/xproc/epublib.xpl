@@ -214,11 +214,6 @@
 			<p:input port="parameters">
 				<p:pipe port="parameters" step="epub-archive-path"/>
 			</p:input>
-			<p:input port="source">
-				<p:inline>
-					<c:result/>
-				</p:inline>
-			</p:input>
 		</p:xslt>
 		
 	
