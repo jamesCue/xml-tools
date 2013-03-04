@@ -175,6 +175,54 @@
 		
 		
 	</p:declare-step>
+	
+	<p:declare-step name='epub-archive-path' type="epub:archive-path">
+	
+	
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">Creates a c:result element containing the path to the
+				output EPUB file. This step simply calls the supplied stylesheet.</p>
+		</p:documentation>
+		
+		<p:input port="source" primary="true">
+			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The main XML document so that content can be used to 
+				drive the file name.</p></p:documentation>
+		</p:input>
+		
+		<p:input port="parameters" kind="parameter">
+			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The parameters to be used to determine the file name.</p></p:documentation>
+		</p:input>
+		
+		<p:input port="compute-path">
+			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The stylesheet use to generate the file name.</p></p:documentation>
+		</p:input>
+		
+		<p:output port="result" primary="true">
+			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">A c:result element containing the file name.</p></p:documentation>
+			<p:pipe port="result" step="create-path-name"/>
+		</p:output>	
+		
+		
+		<!-- Build the list of directories -->
+		<p:xslt name="create-path-name">
+			<p:input port="source">
+				<p:pipe port="source" step="epub-archive-path"/>
+			</p:input>
+			<p:input port="stylesheet">
+				<p:pipe port="calculate-archive-path" step="epub-archive-path"/>
+			</p:input>
+			<p:input port="parameters">
+				<p:pipe port="parameters" step="epub-archive-path"/>
+			</p:input>
+			<p:input port="source">
+				<p:inline>
+					<c:result/>
+				</p:inline>
+			</p:input>
+		</p:xslt>
+		
+	
+	</p:declare-step>
 
 	<p:declare-step name="create-ncx" type="epub:create-ncx">
 		
