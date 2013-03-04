@@ -59,7 +59,6 @@
 		</p:for-each>
 		
 	</p:declare-step>
-	
 
 	<p:declare-step name="copy-images" type="epub:copy-images">
 
@@ -116,13 +115,13 @@
     		</p:input>
     	</p:xslt>
     	
-    	<epub:copy-files name="copy-images">
+    	<epub:copy-file-list name="copy-images">
 			<p:input port="source">
 				<p:pipe port="result" step="get-images"/>
 			</p:input>
 			<p:with-option name="source" select="$image-source"/>
 			<p:with-option name="target" select="$image-target"/>
-		</epub:copy-files>
+		</epub:copy-file-list>
 		
     </p:declare-step>
 
@@ -177,7 +176,6 @@
 		
 	</p:declare-step>
 
-
 	<p:declare-step name="create-ncx" type="epub:create-ncx">
 		
 		<p:documentation>
@@ -222,8 +220,6 @@
 		</ccproc:recursive-xslt>
 		
 	</p:declare-step>
-	
-	
 	
 	<p:declare-step name="create-opf" type="epub:create-opf">
 		
