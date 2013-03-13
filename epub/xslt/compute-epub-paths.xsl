@@ -105,7 +105,7 @@
 			the results may be unpredictable.</p>
 	</doc:documentation>
 	<xsl:template name="create-path-name">
-		<xsl:param name="dir-name"/>
+		<xsl:param name="dir-name" select="''"/>
 		<xsl:param name="param-name"/>
 
 		<c:param name="{$param-name}"
@@ -139,7 +139,7 @@
 
 		<xsl:param name="root"/>
 		<xsl:param name="content"/>
-		<xsl:param name="dir" select="''"/>
+		<xsl:param name="dir"/>
 
 		<xsl:value-of
 			select="cfunc:convert-slashes(concat(
