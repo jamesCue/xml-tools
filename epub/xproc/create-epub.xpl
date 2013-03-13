@@ -1,156 +1,312 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:library xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
-	xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:epub="http://www.corbas.net/ns/epub"
-	xmlns:cstep="http://www.corbas.net/ns/xproc" xmlns:corbas="http://www.corbas.net/ns/tempns"
-	xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:h="http://www.w3.org/1999/xhtml">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:epub="http://www.corbas.co.uk/ns/epub"
+	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
+	xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0" 
+	name="create-epub" type="epub:create-epub">
 
-	<p:declare-step name="create-epub" type="epub:create-epub">
-
+	<!-- INPUTS -->
+	<p:input port="source" primary="true">
 		<p:documentation>
-			<p xmlns="http:/wwww.w3.org/1999/xhtml">This scripts creates an unpackaged EPUB 2 file
-				into a specified directory. The starting point is an XML file and four stylesheets
-				to process it (provided as inputs):</p>
-			<p>The contents of the primary parameters port will be available to all scripts.</p>
+			<p xmlns="http://www.w3.org/1999/xhtml">The primary input for the script is the XML file
+				to be transformed into an EPUB file.</p>
 		</p:documentation>
-
-		<p:input port="source" primary="true">
-			<p:documentation><h:p>The input XML document to be converted to EPUB
-				content.</h:p></p:documentation>
-		</p:input>
-
-		<p:input port="html-generator">
-			<p:documentation>
-				<h:p>XSLT stylesheet to generate the HTML. The HTML html documents must be written
-					using <h:code>xsl:result-document</h:code> and must have an additional
-						<h:code>meta</h:code> tag called <h:pre>file-id</h:pre> which must contain
-					the name of the file to be written without any suffix (e.g.
-						<h:pre>chapter-001</h:pre></h:p>). The primary output of the XLST will be
-				discarded. </p:documentation>
-		</p:input>
-
-		<p:input port="package-generator">
-			<p:documentation>
-				<h:p>XSLT stylesheet to generate the package file. The primary output of this script
-					is used as the package file. Secondary outputs are ignored.</h:p>
-			</p:documentation>
-		</p:input>
-
-		<p:input port="ncx-generator">
-			<p:documentation>
-				<h:p>XSLT stylesheet to generate the declaratory table of contents file. The primary
-					output is used to generate the NCX file. Secondary outputs are ignored.</h:p>
-			</p:documentation>
-		</p:input>
-
-		<p:input port="resource-generator">
-			<p:documentation>
-				<h:p>XSLT stylesheet used to generate a list of external resources to be copied into
-					the EPUB structure. The output must be a sequence of <h:code>zip-manifest</h:code> elements as described
-					in the documentation for <a href="http://exproc.org/proposed/steps/other.html#zip">pxp:zip</a>.
-				An additional parameter, <h:code>media-type</h:code>, must be provided for each <h:code>entry</h:code>
-				element. This should contain the value to be used for the same attribute in the EPUB manifest. The
-				extra attribute will be removed before the zip file is created.</h:p>
-			</p:documentation>
-		</p:input>
-
-		<p:input kind="parameter" primary="true" port="params">
-			<p:documentation>
-				<h:p>Default parameter port. This is passed to each xslt stylesheet to allow
-					additional information to be provided. All the options passed to this step are
-					also provided as parameters.</h:p>
-			</p:documentation>
-		</p:input>
-
-		<p:output port="result" primary="true" sequence="true">
-			<p:documentation>
-				<p xmlns="http://www.w3.org/1999/xhtml">A sequence of c:result elements, one for
-					each file written during this step.</p>
-			</p:documentation>
-			<p:pipe port="result" step="final"/>
-		</p:output>
-
-
-		<!-- name of the directory in which the content directory should be created -->
-		<p:option name="root" select="'.'">
-			<p:documentation>
-				<h:p>Root directory for the output. All other directories are created within it. The
-					META-INF directory is created at a later stage.</h:p>
-			</p:documentation>
-		</p:option>
-
-		<!-- metadata filenames -->
-		<p:option name="package-file" select="'package.opf'"/>
-		<p:option name="ncx-file" select="'toc.ncx'"/>
-
-		<!-- main content directory -->
-		<p:option name="content-dir-name" select="'OPS'"/>
-
-		<!-- names of various content locations -->
-		<p:option name="image-dir-name" select="'images'"/>
-		<p:option name="xhtml-dir-name" select="'xhtml'"/>
-		<p:option name="css-dir-name" select="'styles'"/>
-		<p:option name="font-dir-name" select="'fonts'"/>
-		<p:option name="media-dir-name" select="'media'"/>
-
-		<!-- set up some paths with a parameter set. All the options above are combined into a 
-    c:param-set and passed to the path definition script which returns another param-set. -->
-
-
-		<p:variable name="opf-path"
-			select="string-join(($root, $content-dir-name, $package-file), '/')"/>
-		<p:variable name="ncx-path" select="string-join(($root, $content-dir-name, $ncx-file), '/')"/>
-		<p:variable name="xhtml-path"
-			select="string-join(($root, $content-dir-name, $xhtml-dir-name), '/')"/>
-		<p:variable name="css-path"
-			select="string-join(($root, $content-dir-name, $css-dir-name), '/')"/>
-		<p:variable name="image-path"
-			select="string-join(($root, $content-dir-name, $image-dir-name), '/')"/>
-		<p:variable name="font-path"
-			select="string-join(($root, $content-dir-name, $font-dir-name), '/')"/>
-		<p:variable name="media-path"
-			select="string-join(($root, $content-dir-name, $media-dir-name), '/')"/>
-		<p:variable name="resource-path"
-			select="string-join(($root, $content-dir-name, $resource-dir-name), '/')"/>
-
-		<!-- set up base URLs for relative access to images, etc (everything bar fonts) from HTML. These are not the
-    most complex - they assume that either there are very few options here. -->
-		<p:variable name="css-uri-base"
-			select="if ($xhtml-dir-name) then if ($css-dir-name) concat("/>
-		<p:variable name="image-uri-base" select="concat('../', $image-dir-name)"/>
-
-
-		<!-- start by creating the paths -->
-		<epub:create-paths>
-			<p:with-option name="base-path" select="$root"/>
-			<p:with-option name="content-dir-name" select="$content-dir-name"/>
-			<p:with-option name="xhtml-dir-name" select="$xhtml-dir-nane"/>
-			<p:with-option name="styles-dir-name" select="$styles-dir-name"/>
-			<p:with-option name="images-dir-name" select="$images-dir-name"/>
-		</epub:create-paths>
-
-
-		<!-- metadata files -->
-		<epub:create-opf name="create-opf">
-			<p:input port="source">
-				<p:pipe port="source" step="create-epub"/>
-			</p:input>
-			<p:with-option name="href" select="$opf-path"/>
-		</epub:create-opf>
-
-
-		<epub:create-ncx name="create-ncx">
-			<p:input port="source">
-				<p:pipe port="source" step="create-epub"/>
-			</p:input>
-			<p:with-option name="href" select="$ncx-path"/>
-			<p:with-option name="xhtml-dir-name" select="$xhtml-dir-name"/>
-		</epub:create-ncx>
-
-	</p:declare-step>
-
-	<p:declare-step name="create-paths" type="epub:create-paths">
+	</p:input>
+	
+	<p:input port="parameters" kind="parameter">
 		<p:documentation>
-			<h:p>Internal routine used to set up the initial paths for the EPUB output.</h:p>
+			<p xmlns="http://www.w3.org/1999/xhtml">The parameter input should be connected to the
+			XML configuration file.</p>
 		</p:documentation>
-	</p:declare-step>
-</p:library>
+	</p:input>
+
+	<p:input port="compute-paths">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The compute-paths stylesheet must return a set
+				of paths to be created for the EPUB file before the archive is created. It's
+				normally not necessary to modify the default stylesheet. See
+				`compute-epub-paths.xsl` for details on inputs and outputs. </p>
+		</p:documentation>
+	</p:input>
+
+	<p:input port="compute-uris">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The compute-uris stylesheet must return a set
+				of URIs used to reference documents in xhtml files and the manifest. It's
+				normally not necessary to modify the default stylesheet. See
+				`compute-epub-uris.xsl` for details on inputs and outputs. </p>
+		</p:documentation>
+	</p:input>
+	
+	<p:input port="compute-archive-name">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The compute-archive-name stylesheet must return a c:result
+				element defining the full path to the output archive file (as a URL). </p>
+		</p:documentation>
+	</p:input>
+	
+	<p:input port="image-list">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The image-list stylesheet must return 
+			a c:result element containing a c:file element (with no path) for each image
+		referenced in the source XML.</p>
+		</p:documentation>
+	</p:input>
+	
+	<p:input port="create-html-manifest">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The create-html-manifest files must
+			contain a manifest file listing the XSLT stylesheets to be executed against
+			the source to create the output html.</p>
+		</p:documentation>
+	</p:input>
+
+	<p:input port="create-opf-manifest">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The create-opf-manifest files must
+				contain a manifest file listing the XSLT stylesheets to be executed against
+				the source to create the package file.</p>
+		</p:documentation>
+	</p:input>
+	
+	<p:input port="create-ncx-manifest">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The create-ncx-manifest files must
+				contain a manifest file listing the XSLT stylesheets to be executed against
+				the source to create the ncx toc file.</p>
+		</p:documentation>
+	</p:input>
+	
+	<p:output port="result" primary="true">
+		<p:documentation>
+			<p xmlns="http://www.w3.org/1999/xhtml">The primary output is a copy of the OPF file for
+				the EPUB created.</p>
+		</p:documentation>
+		<p:pipe port="result" step="epub-paths"/>
+	</p:output>
+	
+	
+
+	<!-- Path to EPUB file -->
+	<p:option name="epub-path" required="true">
+		<p:documentation>
+			<p xmlns="http:/www.w3.org/1999/xhtml">The path to the final EPUB file to be output must
+				be provided as an input. This must not include the file name (this is generated
+				internally).</p>
+		</p:documentation>
+	</p:option>
+
+	
+	<p:import href="../../xproc/load-sequence-from-file.xpl"/>
+	<p:import href="epublib.xpl"/>
+	<p:import href="package-epub-lib.xpl"/>
+	
+	<!-- Combine parameters with the root path and other options. Note p:in-scope-vars is not
+	know to oxygen's schema so an error is displayed in the UI. -->
+	<p:in-scope-names name="vars"/>
+	<p:parameters name="initial-parameters">
+		<p:input port="parameters">
+			<p:pipe port="parameters" step="create-epub"/>
+			<p:pipe port="result" step="vars"/>
+		</p:input>
+	</p:parameters>
+	
+		
+	<!--
+		Start by generating the paths to be used and writing them.
+		Then work out the name of the file EPUB file.
+	-->
+	<epub:create-paths name="epub-paths">
+		<p:input port="parameters">
+			<p:pipe port="result" step="initial-parameters"/>
+		</p:input>
+		<p:input port="compute-paths">
+			<p:pipe port="compute-paths" step="create-epub"/>
+		</p:input>
+	</epub:create-paths>
+	
+	
+	<!-- The EPUB file name is stored in a c:result element -->
+	<epub:archive-path name="archive-path">
+		<p:input port="parameters">
+			<p:pipe port="result" step="initial-parameters"/>
+		</p:input>
+		<p:input port="compute-path">
+			<p:pipe port="compute-archive-name" step="create-epub"/>
+		</p:input>
+		<p:input port="source">
+			<p:pipe port="source" step="create-epub"></p:pipe>
+		</p:input>
+	</epub:archive-path>
+	
+	<p:sink/>
+	
+	<!-- Generate the actual internal URIs used from the xhtml 
+	to reference stylesheeets, images, etc -->
+	<epub:create-uris name="epub-uris">
+		<p:input port="parameters">
+			<p:pipe port="result" step="initial-parameters"/>
+		</p:input>
+		<p:input port="compute-uris">
+			<p:pipe port="compute-uris" step="create-epub"/>
+		</p:input>
+	</epub:create-uris>	
+	<p:sink/>
+	
+	<!-- Create a set of parameters containing all the information -->
+	<p:parameters name="combined-parameters">
+		<p:input port="parameters">
+			<p:inline>		<!-- default parameters where mainly used outside of stylesheets -->
+				<c:param-set>
+					<c:param name="opf-file-name" value="package.opf"/>
+					<c:param name="ncx-file-name" value="toc.ncx"/>
+				</c:param-set>
+			</p:inline>
+			<p:pipe port="result" step="initial-parameters"/>
+			<p:pipe port="result" step="epub-uris"/>
+			<p:pipe port="result" step="epub-paths"/>
+		</p:input>
+	</p:parameters>
+	
+	<!-- Now we copy over any additional files that are required. 
+	For images we have a copy tool because we check the content as well 
+	as the additional list. However, we also have stylesheets and fonts
+	to copy over (we can modify this list to add other types easily
+	enough). -->
+	<epub:copy-images name="get-images">
+		<p:input port="source">
+			<p:pipe port="source" step="create-epub"/>
+		</p:input>
+		<p:input port="image-list">
+			<p:pipe port="image-list" step="create-epub"/>
+		</p:input>
+		<p:input port="parameters">
+			<p:pipe port="result" step="initial-parameters"/>
+		</p:input>
+		<p:with-option name="image-source" select="//c:param[@name='image-source']/@value">
+			<p:pipe port="result" step="initial-parameters"/>			
+		</p:with-option>
+		<p:with-option name="image-target" select="//c:param[@name='image-dir']/@value">
+			<p:pipe port="result" step="epub-paths"/>
+		</p:with-option>
+	</epub:copy-images>
+	
+	<p:sink/>
+	
+	<!-- styles -->
+	<epub:create-file-list name="get-styles">
+		<p:with-option name="file-list" select="//c:param[@name='css-files']/@value">
+			<p:pipe port="result" step="initial-parameters"/>
+		</p:with-option>
+	</epub:create-file-list>
+	
+	<epub:copy-file-list name="copy-styles">
+		<p:with-option name="source" select="//c:param[@name='style-source']/@value">
+			<p:pipe port="result" step="initial-parameters"/>			
+		</p:with-option>
+		<p:with-option name="target" select="//c:param[@name='style-dir']/@value">
+			<p:pipe port="result" step="epub-paths"/>
+		</p:with-option>
+	</epub:copy-file-list>
+	
+	<p:sink/>
+	
+	<!-- fonts -->
+	<epub:create-file-list name="get-fonts">
+		<p:with-option name="file-list" select="//c:param[@name='font-files']/@value">
+			<p:pipe port="result" step="initial-parameters"/>
+		</p:with-option>
+	</epub:create-file-list>
+	
+	<epub:copy-file-list name="copy-fonts">
+		<p:with-option name="source" select="//c:param[@name='font-source']/@value">
+			<p:pipe port="result" step="initial-parameters"/>			
+		</p:with-option>
+		<p:with-option name="target" select="//c:param[@name='font-dir']/@value">
+			<p:pipe port="result" step="epub-paths"/>
+		</p:with-option>
+	</epub:copy-file-list>
+
+	<p:sink/>
+	
+	<!-- Generate and store the xhtml -->
+	<ccproc:load-sequence-from-file name="load-xhtml-stylesheets">
+		<p:input port="source">
+			<p:pipe port="create-html-manifest" step="create-epub"/>
+		</p:input>
+	</ccproc:load-sequence-from-file>
+	
+	<epub:create-xhtml name="xhtml-time">
+		<p:input port="source">
+			<p:pipe port="source" step="create-epub"/>
+		</p:input>
+		<p:input port="stylesheets">
+			<p:pipe port="result" step="load-xhtml-stylesheets"/>
+		</p:input>
+		<p:input port="parameters">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:input>
+		<p:with-option name="xhtml-dir" select="//c:param[@name='xhtml-dir']/@value">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:with-option>
+		
+	</epub:create-xhtml>  
+	
+	<p:sink/>
+	
+	<!-- Generate and store the package file -->
+	
+	<ccproc:load-sequence-from-file name="load-opf-stylesheets">
+		<p:input port="source">
+			<p:pipe port="create-opf-manifest" step="create-epub"/>
+		</p:input>
+	</ccproc:load-sequence-from-file>
+	
+	<epub:create-and-save-file name="opf-time">
+		<p:input port="source">
+			<p:pipe port="source" step="create-epub"/>
+		</p:input>
+		<p:input port="stylesheets">
+			<p:pipe port="result" step="load-opf-stylesheets"/>
+		</p:input>
+		<p:input port="parameters">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:input>
+		<p:with-option name="content-dir" select="//c:param[@name='content-dir']/@value">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:with-option>
+		<p:with-option name="filename" select="//c:param[@name='opf-file-name']/@value">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:with-option>
+	</epub:create-and-save-file>  
+
+	<p:sink/>
+	
+	<!-- Generate and store the ncx file -->
+	
+	<ccproc:load-sequence-from-file name="load-ncx-stylesheets">
+		<p:input port="source">
+			<p:pipe port="create-ncx-manifest" step="create-epub"/>
+		</p:input>
+	</ccproc:load-sequence-from-file>
+	
+	<epub:create-and-save-file name="ncx-time">
+		<p:input port="source">
+			<p:pipe port="source" step="create-epub"/>
+		</p:input>
+		<p:input port="stylesheets">
+			<p:pipe port="result" step="load-ncx-stylesheets"/>
+		</p:input>
+		<p:input port="parameters">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:input>
+		<p:with-option name="content-dir" select="//c:param[@name='content-dir']/@value">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:with-option>
+		<p:with-option name="filename" select="//c:param[@name='ncx-file-name']/@value">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:with-option>
+	</epub:create-and-save-file>  
+	
+	<p:sink/>
+
+</p:declare-step>

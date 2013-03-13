@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:library xmlns:p="http://www.w3.org/ns/xproc" xmlns:epub="http://www.corbas.net/ns/epub"
 	xmlns:cx="http://xmlcalabash.com/ns/extensions"
-	xmlns:cxf="http://xmlcalabash.com/ns/extensions/fileutils"
 	xmlns:pxf="http://exproc.org/proposed/steps/file"
 	xmlns:pxp="http://exproc.org/proposed/steps"
 	xmlns:h="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0">
@@ -48,11 +47,11 @@
 			<p:pipe port="result" step="store-mimetype"/>
 		</p:output>
 
-		<cxf:tempfile href="./" prefix="mimetype" suffix=".tmp" name="temp-mimetype-file"
+		<pxf:tempfile href="./" prefix="mimetype" suffix=".tmp" name="temp-mimetype-file"
 			delete-on-exit="true">
 			<p:documentation><h:p>Create a temporary file we can use to store the mimetype
 					file</h:p></p:documentation>
-		</cxf:tempfile>
+		</pxf:tempfile>
 
 		<p:identity name="make-tempfile-primary">
 
@@ -135,12 +134,12 @@
 			</p:input>
 		</p:template>
 
-		<cxf:tempfile href="./" prefix="container" suffix=".xml" name="temp-container-file"
+		<pxf:tempfile href="./" prefix="container" suffix=".xml" name="temp-container-file"
 			delete-on-exit="true">
 			<p:documentation>
 				<h:p>Creates a temporary file we can use to store the container file.</h:p>
 			</p:documentation>
-		</cxf:tempfile>
+		</pxf:tempfile>
 
 
 		<p:identity name="container-identity">
