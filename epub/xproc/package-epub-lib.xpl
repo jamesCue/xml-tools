@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:library xmlns:p="http://www.w3.org/ns/xproc" xmlns:epub="http://www.corbas.net/ns/epub"
+<p:library xmlns:p="http://www.w3.org/ns/xproc" xmlns:epub="http://www.corbas.co.uk/ns/epub"
 	xmlns:cx="http://xmlcalabash.com/ns/extensions"
 	xmlns:pxf="http://exproc.org/proposed/steps/file"
 	xmlns:pxp="http://exproc.org/proposed/steps"
