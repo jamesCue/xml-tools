@@ -278,8 +278,6 @@
 			<p:pipe port="result" step="combined-parameters"/>
 		</p:with-option>
 	</epub:create-and-save-file>  
-
-	<p:sink/>
 	
 	<!-- Generate and store the ncx file -->
 	
@@ -309,23 +307,24 @@
 	
 	<p:sink/>
 	
-	<p:load  dtd-validate="false" name="reload-opf">
-		<p:with-option name="href" select="concat(//c:param[@name='content-dir']/@value, //c:param[@name='opf-file-name']/@value)">
-			<p:pipe port="result" step="combined-parameters"/>
-		</p:with-option>
+	<p:load dtd-validate="false" name="reload-opf">
+		<p:with-option name="href" select="concat(//c:param[@name='content-dir']/@value, //c:param[@name='opf-file-name']/@value"/>
 	</p:load>  
 	
-	<!-- Package the EPUB file -->
 	<epub:package-epub name="make-zip">
+		
 		<p:input port="source">
 			<p:pipe port="result" step="reload-opf"/>
 		</p:input>
-
+		
+		<p:with-option name="content-dir-name" select="//c:param[@name='content-dir-name']/@value">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:with-option>
+		
 		<p:with-option name="epub-path" select="//c:result">
 			<p:pipe port="result" step="archive-path"/>
 		</p:with-option>
-
+		
 	</epub:package-epub>
 	
-
 </p:declare-step>

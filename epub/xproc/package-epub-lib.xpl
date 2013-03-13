@@ -360,7 +360,7 @@
 			<p:pipe port="result" step="package-epub-result"/>
 		</p:output>
 
-		<p:option name="content-dir" select="'OPS'">
+		<p:option name="content-dir-name" select="'OPS'">
 			<p:documentation>
 				<h:p>Name of the directory into which all content (including the OPF file) will be
 					stored in the zip file. Defaults to <h:code>OPS</h:code>.</h:p>
@@ -377,7 +377,7 @@
 				created.</h:p>></p:documentation>
 		</p:option>
 
-		<p:variable name="opf-uri" select="concat($content-dir, '/', $package-file)"/>
+		<p:variable name="opf-uri" select="concat($content-dir-name, '/', $package-file)"/>
 		<p:variable name="opf-base" select="p:base-uri()"/>
 
 		<epub:write-mimetype name="temp-mimetype"/>
@@ -389,7 +389,7 @@
 			<p:input port="source">
 				<p:pipe port="source" step="package-epub"/>
 			</p:input>
-			<p:with-option name="content-dir" select="$content-dir"/>
+			<p:with-option name="content-dir" select="$content-dir-name"/>
 			<p:with-option name="opf-uri" select="$opf-uri"/>
 		</epub:convert-opf-to-zip-manifest>
 
