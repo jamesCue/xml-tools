@@ -312,8 +312,7 @@
 					the file name.</p></p:documentation>
 			<p:pipe port="result" step="create-path-name"/>
 		</p:output>
-
-
+		
 		<!-- Build the list of directories -->
 		<p:xslt name="create-path-name">
 			<p:input port="source">

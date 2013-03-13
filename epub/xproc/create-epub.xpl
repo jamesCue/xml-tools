@@ -80,7 +80,7 @@
 		<p:documentation>
 			<p xmlns="http://www.w3.org/1999/xhtml">The primary output is a copy of zip file manifest.</p>
 		</p:documentation>
-		<p:pipe port="result" step="make-zip"/>
+		<p:pipe port="result" step="reload-opf"/>
 	</p:output>
 	
 	
@@ -135,7 +135,6 @@
 		<p:input port="source">
 			<p:pipe port="source" step="create-epub"></p:pipe>
 		</p:input>
-		<p:with-option name="epub-path" select="$epub-path"/>
 	</epub:archive-path>
 	
 	<p:sink/>
@@ -311,6 +310,7 @@
 		<p:with-option name="href" select="concat(//c:param[@name='content-dir']/@value, //c:param[@name='opf-file-name']/@value"/>
 	</p:load>  
 	
+	
 	<epub:package-epub name="make-zip">
 		
 		<p:input port="source">
@@ -321,7 +321,7 @@
 			<p:pipe port="result" step="combined-parameters"/>
 		</p:with-option>
 		
-		<p:with-option name="epub-path" select="//c:result">
+		<p:with-option name="epub-path" select="concat($epub-path, //c:result)">
 			<p:pipe port="result" step="archive-path"/>
 		</p:with-option>
 		
