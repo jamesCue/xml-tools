@@ -61,6 +61,11 @@
 		</xsl:if>
 
 		<c:param-set>
+			
+			<xsl:call-template name="create-path-name">
+				<xsl:with-param name="param-name" select="'content-dir'"/>
+			</xsl:call-template>
+			
 			<xsl:call-template name="create-path-name">
 				<xsl:with-param name="dir-name" select="$image-dir-name"/>
 				<xsl:with-param name="param-name" select="'image-dir'"/>
@@ -134,7 +139,7 @@
 
 		<xsl:param name="root"/>
 		<xsl:param name="content"/>
-		<xsl:param name="dir"/>
+		<xsl:param name="dir" select="''"/>
 
 		<xsl:value-of
 			select="cfunc:convert-slashes(concat(
