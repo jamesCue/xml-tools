@@ -26,7 +26,7 @@
 		
 		<xsl:variable name="page-node"
 			select="$node/ancestor-or-self::*[local-name() = $page-elements][1]"/>
-
+		
 		<xsl:variable name="of-my-type" select="$page-nodes[local-name() = local-name($page-node)]"/>
 		<xsl:variable name="my-index" select="index-of($of-my-type, $page-node)"/>
 		<xsl:variable name="suffix" select="format-number($my-index, '000')"/>
