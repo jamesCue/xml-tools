@@ -338,7 +338,7 @@
 					<xsl:value-of select="@target-attribute-value"/>
 				</axsl:attribute>
 				<axsl:apply-templates
-					select="@*[not(local-name() = 'id')][not(@{$target-attribute})]"/>
+					select="@*[not(local-name() = 'id')][not(local-name(.) = '{$target-attribute}')]"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
