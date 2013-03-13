@@ -8,7 +8,7 @@
 	<xsl:param name="page-element-names" select="'preface chapter appendix'"/>
 	<xsl:param name="component-delimiter" select="'-'"/>
 	
-	<xsl:param name="xhtml-suffix"/>
+	<xsl:param name="xhtml-suffix" select="'xhtml'"/>
 	
 	<xsl:variable name="page-elements" select="tokenize($page-element-names, '\s+')"/>
 	<xsl:variable name="page-nodes" select="//*[local-name() = $page-elements]"/>
