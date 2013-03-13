@@ -330,11 +330,11 @@
 
 	</p:declare-step>
 
-	<p:declare-step name="create-ncx" type="epub:create-ncx">
+	<p:declare-step name="create-and-save-file" type="epub:create-and-save-file">
 
 		<p:documentation>
-			<p xmlns="http://www.w3.org/1999/xhtml">This step executes one or XSLT stylesheets
-				against the input XML to generate the NCX file. The stylesheets are executed
+			<p xmlns="http://www.w3.org/1999/xhtml">This step executes one or more XSLT stylesheets
+				against the input XML to generate an output file. The stylesheets are executed
 				recursively feeding the output from one to the input of the next.</p>
 		</p:documentation>
 
@@ -356,71 +356,50 @@
 					with all of the current parameters and main script variables and
 				options.</p></p:documentation>
 		</p:input>
-
+		
 		<p:output port="result">
-			<p:pipe step="transform-input" port="result"/>
+			<p:pipe step="transform-input" port="result">
+				<p:documentation>
+					<p xmlns="http://www.w3.org/1999/xhtml">The result of the step is the file generated.</p>
+				</p:documentation>
+			</p:pipe>
 		</p:output>
-
-		<!-- Create the NCX file via recursive xslt-->
+		
+		<p:option name="content-dir" required="true">
+			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The directory to which the output must
+				be written.</p></p:documentation>
+		</p:option>
+		
+		<p:option name="filename" required="true">
+			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The name of the file to which the output must
+				be written.</p></p:documentation>
+		</p:option>
+		
+		
+		<!-- Create the output file via recursive xslt-->
 		<ccproc:recursive-xslt name="transform-input">
 			<p:input port="stylesheets">
-				<p:pipe port="stylesheets" step="create-ncx"/>
+				<p:pipe port="stylesheets" step="create-and-save-file"/>
 			</p:input>
 			<p:input port="source">
-				<p:pipe port="source" step="create-ncx"/>
+				<p:pipe port="source" step="create-and-save-file"/>
 			</p:input>
 			<p:input port="parameters">
-				<p:pipe port="parameters" step="create-ncx"/>
+				<p:pipe port="parameters" step="create-and-save-file"/>
 			</p:input>
 		</ccproc:recursive-xslt>
 
-	</p:declare-step>
-
-	<p:declare-step name="create-opf" type="epub:create-opf">
-
-		<p:documentation>
-			<p xmlns="http://www.w3.org/1999/xhtml">This step executes one or XSLT stylesheets
-				against the input XML to generate the package file. The stylesheets are executed
-				recursively feeding the output from one to the input of the next.</p>
-		</p:documentation>
-
-		<p:input port="source" primary="true">
-			<p:documentation>
-				<p xmlns="http://www.w3.org/1999/xhtml">The primary input XML document.</p>
-			</p:documentation>
-		</p:input>
-
-		<p:input port="stylesheets" sequence="true">
-			<p:documentation>
-				<p xmlns="http://www.w3.org/1999/xhtml">A sequence of stylesheets to be executed
-					against the content document.</p>
-			</p:documentation>
-		</p:input>
-
-		<p:input port="parameters" kind="parameter">
-			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The parameter port is provided
-					with all of the current parameters and main script variables and
-				options.</p></p:documentation>
-		</p:input>
-
-		<p:output port="result">
-			<p:pipe step="transform-input" port="result"/>
-		</p:output>
-
-		<!-- Create the OPF file via recursive xslt-->
-		<ccproc:recursive-xslt name="transform-input">
-			<p:input port="stylesheets">
-				<p:pipe port="stylesheets" step="create-ncx"/>
-			</p:input>
+		<!-- Recursive xslt can produce a lot of results. make sure we only have one -->
+		<p:split-sequence name="first-only" initial-only="true" test="position()=1">
 			<p:input port="source">
-				<p:pipe port="source" step="create-ncx"/>
+				<p:pipe port="result" step="transform-input"/>
 			</p:input>
-			<p:input port="parameters">
-				<p:pipe port="parameters" step="create-ncx"/>
-			</p:input>
-		</ccproc:recursive-xslt>
-
-
+		</p:split-sequence>
+		
+		<p:store>
+			<p:with-option name="href" select="concat($content-dir, $filename)"/>
+		</p:store>
+		
 	</p:declare-step>
 
 	<p:declare-step name="create-xhtml" type="epub:create-xhtml">

@@ -25,10 +25,13 @@
 	<xsl:param name="xhtml-dir-name" select="'.'"/>
 
 	<doc:documentation ref="dir-parameters"/>
-	<xsl:param name="styles-dir-name" select="'.'"/>
+	<xsl:param name="style-dir-name" select="'.'"/>
 	
 	<doc:documentation ref="dir-parameters"/>
-	<xsl:param name="images-dir-name" select="'.'"/>
+	<xsl:param name="image-dir-name" select="'.'"/>
+
+	<doc:documentation ref="dir-parameters"/>
+	<xsl:param name="font-dir-name" select="'.'"/>
 
 	<doc:documentation ref="dir-parameters"/>
 	<xsl:param name="xhtml-at-top" select="'false'"/>
@@ -38,13 +41,15 @@
 			used in the EPUB generator.</p>
 		<p>The list of URIs generated is:</p>
 		<dl>
-			<dt>xhtml-styles-uri</dt>
+			<dt>xhtml-style-uri</dt>
 			<dd>The relative url path from an xhtml file to the css directory</dd>
-			<td>xhtml-images-uri</td>
+			<td>xhtml-image-uri</td>
 			<dd>The relative url path from an xhtml file to the images directory</dd>
 			<td>package-xhtml-uri</td>
 			<dd>The relative url path from the package file to the xhtml directory</dd>
-			<td>package-styles-uri</td>
+			<td>package-style-uri</td>
+			<dd>The relative url path from the package file to the styles directory</dd>
+			<td>package-font-uri</td>
 			<dd>The relative url path from the package file to the styles directory</dd>
 			<td>package-images-uri</td>
 			<dd>The relative url path from the package file to the images directory</dd>
@@ -56,19 +61,20 @@
 		<c:param-set>
 			<xsl:choose>
 				<xsl:when test="$xhtml-at-top = 'true'">		<!-- string because XProc uses them -->
-					<c:param name="xhtml-styles-uri" value="{concat($styles-dir-name, '/')}"/>
-					<c:param name="xhtml-images-uri" value="{concat($images-dir-name, '/')}"/>
+					<c:param name="xhtml-style-uri" value="{concat($style-dir-name, '/')}"/>
+					<c:param name="xhtml-image-uri" value="{concat($image-dir-name, '/')}"/>
 					<c:param name="package-xhtml-uri" value="'./'"/>	
 				</xsl:when>
 				<xsl:otherwise>
-					<c:param name="xhtml-styles-uri" value="{concat('../', $styles-dir-name, '/')}"/>
-					<c:param name="xhtml-images-uri" value="{concat('../', $images-dir-name, '/')}"/>
+					<c:param name="xhtml-style-uri" value="{concat('../', $style-dir-name, '/')}"/>
+					<c:param name="xhtml-image-uri" value="{concat('../', $image-dir-name, '/')}"/>
 					<c:param name="package-xhtml-uri" value="{concat($xhtml-dir-name, '/')}"/>	
 				</xsl:otherwise>
 			</xsl:choose>
 			
-			<c:param name="package-styles-uri" value="{concat($styles-dir-name, '/')}"/>
-			<c:param name="package-images-uri" value="{concat($images-dir-name, '/')}"/>
+			<c:param name="package-style-uri" value="{concat($style-dir-name, '/')}"/>
+			<c:param name="package-image-uri" value="{concat($image-dir-name, '/')}"/>
+			<c:param name="package-font-uri" value="{concat($font-dir-name, '/')}"/>
 			
 		</c:param-set>
 	</xsl:template>
