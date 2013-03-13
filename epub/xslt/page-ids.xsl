@@ -51,7 +51,7 @@
 		<xsl:param name="fragment" as="xsd:string"/>
 	
 		<xsl:variable name="page-id" select="cfn:page-id($node, $prefix)"/>
-		<xsl:value-of select="cfn:fixed-page-href($page-id, $prefix, $fragment)"/>
+		<xsl:value-of select="cfn:fixed-page-href($page-id, '', $fragment)"/>
 		
 	</xsl:function>
 	
