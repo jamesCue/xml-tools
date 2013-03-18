@@ -310,7 +310,6 @@
 		<p:with-option name="href" select="concat(//c:param[@name='content-dir']/@value, //c:param[@name='opf-file-name']/@value"/>
 	</p:load>  
 	
-	
 	<epub:package-epub name="make-zip">
 		
 		<p:input port="source">
@@ -321,7 +320,7 @@
 			<p:pipe port="result" step="combined-parameters"/>
 		</p:with-option>
 		
-		<p:with-option name="epub-path" select="concat($epub-path, //c:result)">
+		<p:with-option name="epub-path" select="resolve-uri(//c:result, $epub-path)">
 			<p:pipe port="result" step="archive-path"/>
 		</p:with-option>
 		
