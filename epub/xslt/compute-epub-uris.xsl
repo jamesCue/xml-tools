@@ -25,13 +25,13 @@
 	<xsl:param name="xhtml-dir-name" select="'.'"/>
 
 	<doc:documentation ref="dir-parameters"/>
-	<xsl:param name="style-dir-name" select="'.'"/>
+	<xsl:param name="style-dir-name" select="'styles'"/>
 	
 	<doc:documentation ref="dir-parameters"/>
-	<xsl:param name="image-dir-name" select="'.'"/>
+	<xsl:param name="image-dir-name" select="'images'"/>
 
 	<doc:documentation ref="dir-parameters"/>
-	<xsl:param name="font-dir-name" select="'.'"/>
+	<xsl:param name="font-dir-name" select="'fonts'"/>
 
 	<doc:documentation ref="dir-parameters"/>
 	<xsl:param name="xhtml-at-top" select="'false'"/>
