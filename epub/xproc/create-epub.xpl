@@ -80,7 +80,7 @@
 		<p:documentation>
 			<p xmlns="http://www.w3.org/1999/xhtml">The primary output is a copy of zip file manifest.</p>
 		</p:documentation>
-		<p:pipe port="result" step="reload-opf"/>
+		<p:pipe port="result" step="make-zip"/>
 	</p:output>
 	
 	
@@ -278,6 +278,8 @@
 		</p:with-option>
 	</epub:create-and-save-file>  
 	
+	<p:sink/>
+	
 	<!-- Generate and store the ncx file -->
 	
 	<ccproc:load-sequence-from-file name="load-ncx-stylesheets">
@@ -307,7 +309,9 @@
 	<p:sink/>
 	
 	<p:load dtd-validate="false" name="reload-opf">
-		<p:with-option name="href" select="concat(//c:param[@name='content-dir']/@value, //c:param[@name='opf-file-name']/@value"/>
+		<p:with-option name="href" select="concat(//c:param[@name='content-dir']/@value, //c:param[@name='opf-file-name']/@value)">
+			<p:pipe port="result" step="combined-parameters"/>
+		</p:with-option>
 	</p:load>  
 	
 	<epub:package-epub name="make-zip">
