@@ -75,11 +75,7 @@
 					containing the URL which becomes the step output.</h:p>
 			</p:documentation>
 			<p:with-option name="href" select="//c:result"/>
-			<p:input port="source">
-				<p:inline>
-					<doc>application/epub+zip</doc>
-				</p:inline>
-			</p:input>
+			<p:input port="source"><p:inline><doc>application/epub+zip</doc></p:inline></p:input>		
 		</p:store>
 
 	</p:declare-step>
