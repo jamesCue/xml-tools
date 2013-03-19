@@ -15,7 +15,7 @@
 		<p xmlns="http://www.w3.org/1999/xhtml">This stylesheet is used to read a mapping file (as
 			defined by <code>mapping.rng</code> and convert it to an XSLT stylesheet that can be
 			used to read an incoming XML file, read given elements and write out new ones. </p>
-		<p>The script is part of the Word to XML mapping toolkit and run as part of that pipeline.
+		<p xmlns="http://www.w3.org/1999/xhtml">The script is part of the Word to XML mapping toolkit and run as part of that pipeline.
 			It is intended to run after the Word document has been converted to elements in the
 			output XML language but not structured. In general, word paragraphs are mapped to output
 			language paragraphs unless they are tables, images or lists. These paragraphs are then
@@ -344,7 +344,7 @@
 	</xsl:template>
 
 	<doc:documentation>
-		<p xmlns="http:/www.w3.org/1999/xhtml">This template copies the <code class="attribute"
+		<p xmlns="http://www.w3.org/1999/xhtml">This template copies the <code class="attribute"
 				>hint</code> attribute to a <code class="attribute">cword:hint</code> attribute on
 			the output.</p>
 	</doc:documentation>
@@ -353,7 +353,7 @@
 	</xsl:template>
 
 	<doc:documentation>
-		<p xmlns="http:/www.w3.org/1999/xhtml">This template copies the <code class="attribute"
+		<p xmlns="http://www.w3.org/1999/xhtml">This template copies the <code class="attribute"
 				>heading-level</code> attribute to a <code class="attribute">cword:level</code>
 			attribute on the output.</p>
 	</doc:documentation>
@@ -362,7 +362,7 @@
 	</xsl:template>
 
 	<doc:documentation>
-		<p xmlns="http:/www.w3.org/1999/xhtml">This template generates an attribute using the value
+		<p xmlns="http://www.w3.org/1999/xhtml">This template generates an attribute using the value
 			of <code class="attribute">target-attribute-value</code> and the name given by the value
 			of the <code class="attribute">@target-attribute</code> from the <code class="element"
 				>map</code> if and only if that attribute exists.</p>
