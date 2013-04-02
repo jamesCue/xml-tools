@@ -47,7 +47,7 @@
 		</p:option>
 
 
-
+		
 		<!-- loop over the input -->
 		<p:for-each name="process-files">
 
@@ -56,7 +56,7 @@
 			</p:output>
 
 			<p:iteration-source select="//c:file"/>
-
+			
 			<pxf:copy name="copy-single-file">
 				<p:with-option name="href" select="p:resolve-uri(/c:file/@name, $source)"/>
 				<p:with-option name="target" select="$target"/>
@@ -142,7 +142,7 @@
 				elements.</p></p:documentation>
 		</p:input>
 
-		<p:output port="result" primary="true">
+		<p:output port="result" primary="true" sequence="true">
 			<p:pipe port="result" step="do-copy-images"/>
 		</p:output>
 
@@ -157,7 +157,7 @@
 			<p:documentation><p xmlns="http://www.w3.org/1999/xhtml">The image-target option
 					provides the path to which images should be written.</p></p:documentation>
 		</p:option>
-
+		
 
 		<!-- Process the XML to get the images. -->
 		<p:xslt name="get-images">
@@ -179,6 +179,7 @@
 			<p:with-option name="source" select="$image-source"/>
 			<p:with-option name="target" select="$image-target"/>
 		</epub:copy-file-list>
+		
 
 	</p:declare-step>
 

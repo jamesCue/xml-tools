@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:epub="http://www.corbas.co.uk/ns/epub"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
+	xmlns:cx="http://xmlcalabash.com/ns/extensions"
 	xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0" 
 	name="create-epub" type="epub:create-epub">
 
@@ -76,7 +77,7 @@
 		</p:documentation>
 	</p:input>
 	
-	<p:output port="result" primary="true">
+	<p:output port="result" primary="true" sequence="true">
 		<p:documentation>
 			<p xmlns="http://www.w3.org/1999/xhtml">The primary output is a copy of zip file manifest.</p>
 		</p:documentation>
@@ -123,6 +124,7 @@
 		</p:input>
 	</epub:create-paths>
 	
+
 	
 	<!-- The EPUB file name is stored in a c:result element -->
 	<epub:archive-path name="archive-path">
@@ -137,6 +139,7 @@
 		</p:input>
 	</epub:archive-path>
 	
+		
 	<p:sink/>
 	
 	<!-- Generate the actual internal URIs used from the xhtml 
@@ -148,8 +151,9 @@
 		<p:input port="compute-uris">
 			<p:pipe port="compute-uris" step="create-epub"/>
 		</p:input>
-	</epub:create-uris>	
-	<p:sink/>
+	</epub:create-uris>
+
+
 	
 	<!-- Create a set of parameters containing all the information -->
 	<p:parameters name="combined-parameters">
@@ -190,13 +194,14 @@
 	</epub:copy-images>
 	
 	<p:sink/>
-	
+
 	<!-- styles -->
 	<epub:create-file-list name="get-styles">
 		<p:with-option name="file-list" select="//c:param[@name='css-files']/@value">
 			<p:pipe port="result" step="initial-parameters"/>
 		</p:with-option>
 	</epub:create-file-list>
+	
 	
 	<epub:copy-file-list name="copy-styles">
 		<p:with-option name="source" select="//c:param[@name='style-source']/@value">
@@ -224,7 +229,7 @@
 			<p:pipe port="result" step="epub-paths"/>
 		</p:with-option>
 	</epub:copy-file-list>
-
+	
 	<p:sink/>
 	
 	<!-- Generate and store the xhtml -->
