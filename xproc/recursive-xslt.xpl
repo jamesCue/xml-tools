@@ -1,5 +1,29 @@
 <p:library version="1.0" xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:p="http://www.w3.org/ns/xproc" xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
+	
+	<p:documentation>
+		
+		This program and accompanying files are copyright 2008, 2009, 20011, 2012, 2013 Corbas Consulting Ltd.
+		
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+		
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
+		
+		You should have received a copy of the GNU General Public License
+		along with this program.  If not, see http://www.gnu.org/licenses/.
+		
+		If your organisation or company are a customer or client of Corbas Consulting Ltd you may
+		be able to use and/or distribute this software under a different license. If you are
+		not aware of any such agreement and wish to agree other license terms you must
+		contact Corbas Consulting Ltd by email at corbas@corbas.co.uk.
+		
+	</p:documentation>
 
 	<p:declare-step name="recursive-xslt" type="ccproc:recursive-xslt"
 		exclude-inline-prefixes="#all">
@@ -43,7 +67,7 @@
 			</p:documentation>
 		</p:output>
 
-
+		
 		<!-- Split of the first transformation from the sequence -->
 		<p:split-sequence name="split-stylesheets" initial-only="true" test="position()=1">
 			<p:input port="source">
@@ -60,7 +84,7 @@
 
 		<!-- Ignore the result for now -->
 		<p:sink/>
-		
+
 		<!-- Make the step input the current primary -->
 		<p:identity name="force-current-primary">
 			<p:input port="source">
@@ -69,7 +93,7 @@
 		</p:identity>
 
 		<p:for-each name="iterate-over-input">
-			
+
 			<p:output port="result" primary="true" sequence="true"/>
 			<p:output port="secondary" primary="false" sequence="true">
 				<p:pipe port="secondary" step="run-single-xslt"/>
@@ -82,13 +106,14 @@
 			</p:xslt>
 
 		</p:for-each>
-		
+
 		<p:identity name="gather-results">
 			<p:input port="source">
 				<p:pipe port="result" step="iterate-over-input"/>
 				<p:pipe port="secondary" step="iterate-over-input"/>
 			</p:input>
 		</p:identity>
+
 
 		<!-- If there are any remaining stylesheets recurse. The primary
     	input is the result of our XSLT and the remaining
@@ -106,7 +131,7 @@
 			<!-- If we have any transformations remaining recurse -->
 			<p:when test="number(c:result)>0">
 
-				<ccproc:recursive-xslt>
+				<ccproc:recursive-xslt name="continue-recursion">
 
 					<p:input port="stylesheets">
 						<p:pipe port="not-matched" step="split-stylesheets"/>
@@ -123,9 +148,9 @@
 			<!-- Otherwise, pass the output of our transformation back as the result -->
 			<p:otherwise>
 
-				<p:identity>
+				<p:identity name="terminate-recursion">
 					<p:input port="source">
-						<p:pipe port="result" step="iterate-over-input"/>
+						<p:pipe port="result" step="gather-results"/>
 					</p:input>
 				</p:identity>
 

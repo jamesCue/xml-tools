@@ -5,6 +5,30 @@
 	xmlns:doc="http://www.corbas.co.uk/ns/documentation"
 	xmlns:cword="http://www.corbas.co.uk/ns/word" xmlns:cfunc="http://www.corbas.co.uk/ns/functions"
 	version="2.0">
+	
+	<!--
+		
+		This program and accompanying files are copyright 2008, 2009, 20011, 2012, 2013 Corbas Consulting Ltd.
+		
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+		
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
+		
+		You should have received a copy of the GNU General Public License
+		along with this program.  If not, see http://www.gnu.org/licenses/.
+		
+		If your organisation or company are a customer or client of Corbas Consulting Ltd you may
+		be able to use and/or distribute this software under a different license. If you are
+		not aware of any such agreement and wish to agree other license terms you must
+		contact Corbas Consulting Ltd by email at corbas@corbas.co.uk. 
+		
+	-->
 
 	<doc:documentation scope="global">
 		<p xmlns="http://www.w3.org/1999/xhtml">This stylesheet builds structure from unstructured
@@ -90,6 +114,7 @@
 
 			<!-- group over the current content sequence, creating groups that start with
 				titles at the current level -->
+			<!-- local-name() = (concat('para', $level), concat(para...) -->
 			<xsl:for-each-group select="$content" group-starting-with="title[@cword:level]">
 				
 				<xsl:choose>

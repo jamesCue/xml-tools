@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	xmlns="http://www.corbas.co.uk/ns/documentation" xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	targetNamespace="http://www.corbas.co.uk/ns/documentation">
+
+	<xs:import namespace="http://www.w3.org/1999/xhtml" schemaLocation="xhtml5/xhtml5.xsd"/>
+
+
+
+	<xs:element name="documentation">
+		<xs:complexType>
+			<xs:choice minOccurs="1" maxOccurs="unbounded">
+				<xs:choice>
+					<xs:element ref="xhtml:html5.sections.class"/>
+					<xs:element ref="xhtml:html5.headings.class"/>
+				</xs:choice>
+				<xs:element ref="xhtml:html5.grouping.class"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

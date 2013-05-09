@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:include schemaLocation="datatypes.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <xs:attributeGroup name="html5.global.attrs">
+    <xs:attributeGroup ref="html5.global.common.attrs"/>
+    <xs:attributeGroup ref="html5.global.xml.attrs"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.i18n.attrs">
+    <xs:attribute ref="xml:lang"/>
+    <xs:attribute name="lang" type="datatype.languagecode"/>
+    <xs:attribute name="dir">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="ltr"/>
+          <xs:enumeration value="rtl"/>
+          <xs:enumeration value="auto"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.global.xml.attrs">
+    <xs:attribute ref="xml:lang"/>
+    <xs:attribute ref="xml:base"/>
+    <xs:attribute ref="xml:space"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.global.common.attrs">
+    <xs:attribute name="lang" type="datatype.languagecode"/>
+    <xs:attribute name="id" type="datatype.ID"/>
+    <xs:attribute name="title" type="xs:string"/>
+    <xs:attribute name="dir">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="ltr"/>
+          <xs:enumeration value="rtl"/>
+          <xs:enumeration value="auto"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="class" type="datatype.html5.space.separated.tokens"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.lang.attr">
+    <xs:attribute name="lang" use="required" type="datatype.languagecode"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.xml.lang.attr">
+    <xs:attribute ref="xml:lang" use="required"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.dir.attr">
+    <xs:attribute name="dir" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="ltr"/>
+          <xs:enumeration value="rtl"/>
+          <xs:enumeration value="auto"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.id.attr">
+    <xs:attribute name="id" use="required" type="datatype.ID"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.title.attr">
+    <xs:attribute name="title" use="required" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.class.attr">
+    <xs:attribute name="class" use="required" type="datatype.html5.space.separated.tokens"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.xml.base.attr">
+    <xs:attribute ref="xml:base" use="required"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.xml.space.attr">
+    <xs:attribute ref="xml:space" use="required"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.href.attr">
+    <xs:attribute name="href" use="required" type="datatype.html5.URL.spaces"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.hreflang.attr">
+    <xs:attribute name="hreflang" use="required" type="datatype.languagecode"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.target.attr">
+    <xs:attribute name="target" use="required" type="datatype.html5.browsing.context.name.or.keyword"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.rel.attr">
+    <xs:attribute name="rel" use="required" type="datatype.html5.space.separated.tokens"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.media.attr">
+    <xs:attribute name="media" use="required" type="datatype.html5.media.query"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.type.mime.attr">
+    <xs:attribute name="type" use="required" type="datatype.mimetype"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.type.mime.nocharset.attr">
+    <xs:attribute name="type" use="required" type="datatype.mimetype.nocharset"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.charset.attr">
+    <xs:attribute name="charset" use="required" type="datatype.character.encoding"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.src.attr">
+    <xs:attribute name="src" use="required" type="datatype.html5.URL.spaces"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.usemap.attr">
+    <xs:attribute name="usemap" use="required" type="datatype.html5.name.reference"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.cite.attr">
+    <xs:attribute name="cite" use="required" type="datatype.html5.URL.spaces"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.alt.attr">
+    <xs:attribute name="alt" use="required" type="datatype.string"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.name.context.attr">
+    <xs:attribute name="name" use="required" type="datatype.html5.browsing.context.name"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.name.id.attr">
+    <xs:attribute name="name" use="required" type="datatype.html5.name"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.dimension.attrs">
+    <xs:attribute name="width" type="datatype.non-negative.integer"/>
+    <xs:attribute name="height" type="datatype.non-negative.integer"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.width.attr">
+    <xs:attribute name="width" use="required" type="datatype.non-negative.integer"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="html5.height.attr">
+    <xs:attribute name="height" use="required" type="datatype.non-negative.integer"/>
+  </xs:attributeGroup>
+</xs:schema>

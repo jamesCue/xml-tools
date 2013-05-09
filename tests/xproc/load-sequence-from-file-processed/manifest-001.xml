@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data">
+	<item href="load-001.xml"/>
+	<item href="load-002.xml"/>
+	<processed-item stylesheet="test-001.xsl" href="load-003.xml">
+		<item href="load-003.xml"></item>
+	</processed-item>
+</manifest>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><book xmlns:cword="http://www.corbas.co.uk/ns/word" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="PBL1.0">
+	<info>
+		<title>Mapping Test Document</title>
+		<author>
+			<orgname>Corbas Consulting Ltd</orgname>
+		</author>
+	</info>
+	<title cword:hint="prelims-title" cword:level="2" role="01FMHead">Map Test Document - Front Matter Head</title>
+	<epigraph role="03ChapterEpigraph"><para role="03ChapterEpigraph">This content should map to an epigraph.</para></epigraph>
+	<epigraph role="03ChapterEpigraphSource"><attribution role="03ChapterEpigraphSource">Nic Gibson</attribution></epigraph>
+
+	<para role="04BodyText">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam posuere
+		tincidunt molestie. Sed quis purus suscipit libero faucibus placerat vel eu magna. Sed at
+		risus libero, in semper lacus. Nullam ut metus augue, tempus pharetra sem. Aliquam gravida,
+		velit ut ullamcorper luctus, mauris justo sollicitudin elit, at pulvinar purus velit in
+		mauris. Sed porttitor felis sed urna accumsan eu tempus orci imperdiet. Curabitur semper
+		consequat ornare. Quisque aliquet nisi iaculis augue suscipit nec venenatis lacus viverra.
+		Duis venenatis elementum pretium. Sed at nisi sit amet nisl venenatis accumsan non vel est.
+		Aliquam erat volutpat. Suspendisse rutrum nisl ut enim gravida feugiat scelerisque risus
+		scelerisque. Integer ut metus justo, non consectetur massa. In cursus semper rhoncus. Aenean
+		felis velit, commodo ut varius eget, faucibus sed purus. Ut posuere arcu ac eros vestibulum
+		et viverra diam scelerisque.</para>
+
+	<para role="04BodyText">Aenean vitae dui leo. Nunc molestie adipiscing viverra. Nulla sagittis
+		facilisis ornare. Praesent aliquam enim at mauris blandit facilisis. Phasellus nibh sem,
+		vestibulum nec vestibulum a, malesuada ut ante. Cras eget neque massa. Etiam vestibulum,
+		lectus in venenatis viverra, eros felis ornare nisl, ut venenatis metus orci ac urna. Cras
+		viverra tincidunt suscipit. Donec dictum, sapien a hendrerit elementum, erat justo varius
+		justo, at dignissim odio tellus et enim. Morbi sed augue arcu, vitae dictum est. Morbi quis
+		odio sed eros scelerisque porta nec sit amet dui.</para>
+
+	<para role="04BodyText">Praesent sit amet tristique neque. Sed iaculis dolor sed purus ornare et
+		faucibus urna bibendum. Maecenas mollis arcu id elit consectetur sodales. Mauris rhoncus est
+		et odio congue adipiscing. Class aptent taciti sociosqu ad litora torquent per conubia
+		nostra, per inceptos himenaeos. Sed vitae ligula nunc, sed placerat urna. Vestibulum ut
+		turpis dolor. Pellentesque non elit a lorem rutrum malesuada ac eget enim. In pellentesque
+		neque sit amet lacus mattis eget faucibus leo aliquam. Etiam in tincidunt enim. Nulla
+		feugiat dapibus venenatis. Vivamus justo metus, vestibulum in suscipit sed, faucibus eget
+		leo. In vitae metus tellus, sit amet eleifend dolor.</para>
+
+	<para role="04BodyText">Proin ut sem pellentesque nisl ullamcorper dictum non vel nisi. In eros
+		dolor, pretium eu vulputate nec, aliquam sed purus. In auctor libero non felis euismod
+		mattis lacinia sapien egestas. Integer ultricies dui turpis. Nunc suscipit placerat est eget
+		molestie. Etiam urna augue, volutpat ut mollis nec, cursus at ante. Vestibulum posuere
+		venenatis libero at tincidunt. Sed imperdiet purus at libero molestie suscipit.</para>
+
+	<para role="04BodyText">Phasellus id arcu venenatis nunc vestibulum lacinia vel vel odio.
+		Quisque nec consectetur urna. Duis vel nibh non orci feugiat aliquet. Sed molestie enim
+		ante, in mattis arcu. Phasellus laoreet augue in justo consectetur quis laoreet metus
+		facilisis. Fusce aliquet metus nec tellus fringilla sit amet egestas justo sollicitudin.
+		Proin feugiat, nunc eget aliquam rutrum, est libero consectetur metus, vitae dapibus libero
+		elit at dui.</para>
+
+
+	
+	
+	
+	
+	
+	<title cword:hint="prelims-title" cword:level="2" role="01FMAboutAuthorTitle">about the author</title>
+	<para role="04BodyText">Nic Gibson wrote this and many other XML documents for test
+		purposes.</para>
+	
+	<title cword:hint="prelims-title" cword:level="2" role="01FMAcknowledgementsHead">Acknowledgements</title>
+	<para role="04BodyTextFL">Thanks to Penguin for funding the development of the tools that this
+		file tests.</para>
+
+	<title cword:hint="prelims-title" cword:level="2" role="01FMHead">Introduction</title>
+	<para role="04BodyTextFL">This introduces the text. Nuff said.</para>
+
+	<title cword:hint="part-title" cword:level="1" role="02PartTitle">Let's have a part, for the fun of it</title>
+	<title cword:hint="chapter-title" cword:level="2" role="03ChapterNumberandTitle">1. A sample chapter</title>
+	<title cword:hint="A-Head" cword:level="3" role="05HeadA">Section 1</title>
+
+
+	<para role="04BodyTextFL">"Well done, old Fleece!" cried Stubb, "that's Christianity; go
+		on."</para>
+
+	<para role="04BodyText">"No use goin' on; de dam willains will keep a scougin' and slappin' each
+		oder, Massa Stubb; dey don't hear one word; no use a-preaching to such dam g'uttons as you
+		call 'em, till dare bellies is full, and dare bellies is bottomless; and when dey do get 'em
+		full, dey wont hear you den; for den dey sink in the sea, go fast to sleep on de coral, and
+		can't hear noting at all, no more, for eber and eber."</para>
+
+	<para role="04BodyText">"Upon my soul, I am about of the same opinion; so give the benediction,
+		Fleece, and I'll away to my supper."</para>
+
+	<para role="04BodyText">Upon this, Fleece, holding both hands over the fishy mob, raised his
+		shrill voice, and cried—</para>
+
+	<para role="04BodyText">"Cussed fellow-critters! Kick up de damndest row as ever you can; fill
+		your dam bellies 'till dey bust—and den die."</para>
+
+	<para role="04BodyText">"Now, cook," said Stubb, resuming his supper at the capstan; "stand just
+		where you stood before, there, over against me, and pay particular attention."</para>
+
+	<title cword:hint="A-Head" cword:level="3" role="05HeadA">Section 2</title>
+
+	<para role="04BodyTextFL">The room was well lighted by a number of large windows and was
+		beautifully decorated with mural paintings and mosaics, but upon all there seemed to rest
+		that indefinable touch of the finger of antiquity which convinced me that the architects and
+		builders of these wondrous creations had nothing in common with the crude half-brutes which
+		now occupied them.</para>
+
+	<para role="04BodyText">Sola motioned me to be seated upon a pile of silks near the center of
+		the room, and, turning, made a peculiar hissing sound, as though signaling to someone in an
+		adjoining room. In response to her call I obtained my first sight of a new Martian wonder.
+		It waddled in on its ten short legs, and squatted down before the girl like an obedient
+		puppy. The thing was about the size of a Shetland pony, but its head bore a slight
+		resemblance to that of a frog, except that the jaws were equipped with three rows of long,
+		sharp tusks.</para>
+
+	<para role="04BodyText">Sola stared into the brute's wicked-looking eyes, muttered a word or two
+		of command, pointed to me, and left the chamber. I could not but wonder what this
+		ferocious-looking monstrosity might do when left alone in such close proximity to such a
+		relatively tender morsel of meat; but my fears were groundless, as the beast, after
+		surveying me intently for a moment, crossed the room to the only exit which led to the
+		street, and lay down full length across the threshold.</para>
+
+	<para role="04BodyText">This was my first experience with a Martian watch dog, but it was
+		destined not to be my last, for this fellow guarded me carefully during the time I remained
+		a captive among these green men; twice saving my life, and never voluntarily being away from
+		me a moment.</para>
+
+	<para role="04BodyText">While Sola was away I took occasion to examine more minutely the room in
+		which I found myself captive. The mural painting depicted scenes of rare and wonderful
+		beauty; mountains, rivers, lake, ocean, meadow, trees and flowers, winding roadways,
+		sun-kissed gardens—scenes which might have portrayed earthly views but for the different
+		colorings of the vegetation. The work had evidently been wrought by a master hand, so subtle
+		the atmosphere, so perfect the technique; yet nowhere was there a representation of a living
+		animal, either human or brute, by which I could guess at the likeness of these other and
+		perhaps extinct denizens of Mars.</para>
+
+	<title cword:hint="chapter-title" cword:level="2" role="03ChapterNumberandTitle">2. A second sample chapter</title>
+
+	<para role="04BodyTextFL">The ancient caught his staff in a tighter grip and urged along the
+		trail, his old eyes shining greedily.</para>
+
+	<para role="04BodyText">"I hope Har-Lip 's found a crab... or two," he mumbled. "They're good
+		eating, crabs, mighty good eating when you've no more teeth and you've got grandsons that
+		love their old grandsire and make a point of catching crabs for him. When I was a
+		boy—"</para>
+
+	<para role="04BodyText">But Edwin, suddenly stopped by what he saw, was drawing the bowstring on
+		a fitted arrow. He had paused on the brink of a crevasse in the embankment. An ancient
+		culvert had here washed out, and the stream, no longer confined, had cut a passage through
+		the fill. On the opposite side, the end of a rail projected and overhung. It showed rustily
+		through the creeping vines which overran it. Beyond, crouching by a bush, a rabbit looked
+		across at him in trembling hesitancy. Fully fifty feet was the distance, but the arrow
+		flashed true; and the transfixed rabbit, crying out in sudden fright and hurt, struggled
+		painfully away into the brush. The boy himself was a flash of brown skin and flying fur as
+		he bounded down the steep wall of the gap and up the other side. His lean muscles were
+		springs of steel that released into graceful and efficient action. A hundred feet beyond, in
+		a tangle of bushes, he overtook the wounded creature, knocked its head on a convenient
+		tree-trunk, and turned it over to Granser to carry.</para>
+
+	<para role="04BodyText">"Rabbit is good, very good," the ancient quavered, "but when it comes to
+		a toothsome delicacy I prefer crab. When I was a boy—"</para>
+
+	<para role="04BodyText">"Why do you say so much that ain't got no sense?" Edwin impatiently
+		interrupted the other's threatened garrulousness.</para>
+
+	<para role="04BodyText">The boy did not exactly utter these words, but something that remotely
+		resembled them and that was more guttural and explosive and economical of qualifying
+		phrases. His speech showed distant kinship with that of the old man, and the latter's speech
+		was approximately an English that had gone through a bath of corrupt usage.</para>
+</book>

@@ -8,6 +8,30 @@
 	name="load-sequence-from-file">
 	
 	<p:documentation>
+		
+	This program and accompanying files are copyright 2008, 2009, 20011, 2012, 2013 Corbas Consulting Ltd.
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see http://www.gnu.org/licenses/.
+	
+	If your organisation or company are a customer or client of Corbas Consulting Ltd you may
+	be able to use and/or distribute this software under a different license. If you are
+	not aware of any such agreement and wish to agree other license terms you must
+	contact Corbas Consulting Ltd by email at corbas@corbas.co.uk.
+	
+	</p:documentation>
+	
+	<p:documentation>
 		<section xmlns="http://docbook.org/ns/docbook">
 			<info>
 				<title>load-sequence-from-file.xpl</title>
@@ -47,6 +71,8 @@
     	<p:pipe port="result" step="load-iterator"></p:pipe>
     </p:output>
 	
+	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+	
 	<!-- Loop over input and load each file in turn. 
 		We don't handle errors here because the default behaviour (exit with error)
 		is the desired behaviour and the error message is just fine -->
@@ -54,15 +80,64 @@
 		
 		<p:output port="result" primary="true"/>
 		
-		<p:iteration-source select="//data:item">
+		<p:iteration-source select="/data:manifest/*">
 			<p:pipe port="source" step="load-sequence-from-file"/>
 		</p:iteration-source>
 		
-		<p:variable name="href" select="p:resolve-uri(/data:item/@href, p:base-uri(/data:item))"/>
+		<p:choose>
+			
+			<p:when test="/data:item">
+				
+				<p:variable name="href" select="p:resolve-uri(/data:item/@href, p:base-uri(/data:item))"></p:variable>
+				
+				<!-- <cx:message>
+					<p:with-option name="message" select="concat('item: ', $href)"/>
+				</cx:message> -->
+				
+				<p:load name="load-doc">
+					<p:with-option name="href" select="$href"/>
+				</p:load>
+				
+			</p:when>
+			
+			<p:otherwise>
+				
+				<p:variable name="stylesheet" select="p:resolve-uri(/data:processed-item/@stylesheet, 
+					p:base-uri(/data:processed-item))"/>
+				<p:variable name="href" select="p:resolve-uri(/data:processed-item/data:item/@href, 
+					p:base-uri(/data:processed-item/data:item))"/>
+				
+				<!-- <cx:message>
+					<p:with-option name="message" select="concat('stylesheet: ', $stylesheet)"/>
+				</cx:message> -->				
+				
+				<p:load name="load-stylesheet">
+					<p:with-option name="href" select="$stylesheet"/>
+				</p:load>
 
-		<p:load name="load-doc">
-			<p:with-option name="href" select="$href"/>
-		</p:load>
+				<!-- <cx:message>
+					<p:with-option name="message" select="concat('item: ', $href)"/>
+				</cx:message> -->		
+				
+				<p:load name="load-data">
+					<p:with-option name="href" select="$href"/>
+				</p:load>
+				
+				
+				<p:xslt>
+					<p:input port="parameters">
+						<p:empty/>
+					</p:input>
+					<p:input port="stylesheet">
+						<p:pipe port="result" step="load-stylesheet"/>
+					</p:input>
+					<p:input port="source">
+						<p:pipe port="result" step="load-data"/>
+					</p:input>
+				</p:xslt>
+				
+			</p:otherwise>
+		</p:choose>
 		
 		<p:identity/>
 		
