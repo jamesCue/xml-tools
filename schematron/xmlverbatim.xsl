@@ -2,6 +2,19 @@
 
 <!--
     XML to HTML Verbatim Formatter with Syntax Highlighting
+    
+    Version 2.0
+   	Contributors: Nic Gibson
+   	Copyright 2013 Corbas Consulting Ltd
+	Contact: corbas@corbas.co.uk
+
+   	Full rewrite of Oliver Becker's original code to modularise for reuseability 
+   	and rewrite to XSLT 2.0. Code for handling the root element removed as the
+   	purpose of the rewrite is to handle code snippets. Modularisation and extensive
+   	uses of modes used to ensure that special purpose usages can be achieved
+	through use of xsl:import.
+   	
+    
     Version 1.1
     Contributors: Doug Dicks, added auto-indent (parameter indent-elements)
                   for pretty-print
@@ -29,140 +42,38 @@
 	<xsl:output method="html" omit-xml-declaration="yes" indent="no"/>
 
 	<xsl:param name="indent-elements" select="false()"/>
+	<xsl:param name="max-depth" select="10000"/>
 
 	<xsl:variable name="tab" select="'&#x9;'"/>
 	<xsl:variable name="tab-out" select="'&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;'"/>
 	<xsl:variable name="nbsp" select="'&#xA0;'"/>
 	<xsl:variable name="nl" select="'&#xA;'"/>
 
-	<xsl:template match="/">
-		<xsl:apply-templates select="." mode="xmlverb">
-			<xsl:with-param name="force-ns" select="true()"/>
-		</xsl:apply-templates>
-	</xsl:template>
-
-	<!-- root -->
-	<xsl:template match="/" mode="xmlverb">
-
-		<xsl:param name="force-ns" select="false()"/>
-
-		<xsl:text>&#xA;</xsl:text>
-		<xsl:comment>
-         <xsl:text> converted by xmlverbatim.xsl 1.1, (c) O. Becker </xsl:text>
-      </xsl:comment>
-		<xsl:text>&#xA;</xsl:text>
-		<div class="xmlverb-default">
-			<xsl:apply-templates mode="xmlverb">
-				<xsl:with-param name="force-ns" select="$force-ns"/>
-				<xsl:with-param name="indent-elements" select="$indent-elements"/>
-			</xsl:apply-templates>
-		</div>
-		<xsl:text>&#xA;</xsl:text>
-	</xsl:template>
-
-	<!-- wrapper -->
-	<xsl:template match="verb:wrapper">
-		<xsl:apply-templates mode="xmlverb">
-			<xsl:with-param name="indent-elements" select="$indent-elements"/>
-		</xsl:apply-templates>
-	</xsl:template>
-
-	<xsl:template match="verb:wrapper" mode="xmlverb">
-		<xsl:apply-templates mode="xmlverb">
-			<xsl:with-param name="indent-elements" select="$indent-elements"/>
-		</xsl:apply-templates>
-	</xsl:template>
-
-
 	<!-- element nodes -->
-
-
-	<xsl:template match="*" mode="verbatim" as="xs:string">
-		<xsl:param name="force-ns" select="false()"/>
-		<xsl:variable name="indent-elements" select="false()" as="xs:boolean"/>
-		<xsl:param name="indent" select="''"/>
-		<xsl:param name="indent-increment" select="'&#xA0;&#xA0;&#xA0;'"/>
-
-	</xsl:template>
-
-
-	<xsl:template match="*" mode="xmlverb">
-		<xsl:param name="force-ns" select="false()"/>
-		<xsl:param name="indent-elements" select="false()"/>
-		<xsl:param name="indent" select="''"/>
-		<xsl:param name="indent-increment" select="'&#xA0;&#xA0;&#xA0;'"/>
-		<xsl:param name="depth" select="3"/>
-		<xsl:variable name="prefix" select="cfn:namespace-prefix(.)"/>
-
-		<xsl:if test="$indent-elements">
-			<br/>
-			<xsl:value-of select="$indent"/>
-		</xsl:if>
-
-		<xsl:text>&lt;</xsl:text>
-		<xsl:apply-templates select="." mode="ns-prefix"/>
-		<xsl:apply-templates select="." mode="element-name"/>
-		<xsl:apply-templates select="." mode="ns-declarations"/>	
+	<xsl:template match="*" mode="verbatim" >
 		
-		<xsl:variable name="pns" select="../namespace::*"/>
-		<xsl:if test="$pns[name()=''] and not(namespace::*[name()=''])">
-			<span class="xmlverb-ns-name">
-				<xsl:text> xmlns</xsl:text>
-			</span>
-			<xsl:text>=&quot;&quot;</xsl:text>
-		</xsl:if>
-		<xsl:for-each select="namespace::*">
-			<xsl:if test="not($pns[name()=name(current()) and 
-                  .=current()])">
-				<xsl:call-template name="xmlverb-ns"/>
-			</xsl:if>
-		</xsl:for-each>
-		<xsl:for-each select="@*">
-			<xsl:call-template name="xmlverb-attrs"/>
-		</xsl:for-each>
-		<xsl:choose>
-			<xsl:when test="node()">
-				<xsl:text>&gt;</xsl:text>
-				<xsl:choose>
+		<xsl:param name="indent-elements" select="false()" />
+		<xsl:param name="indent" select="''"/>
+		<xsl:param name="indent-increment" select="'&#xA0;&#xA0;&#xA0;'"/>
+		<xsl:param name="depth" select="$max-depth"/>
+		
+		<xsl:apply-templates select="." mode="verbatim-start"  >
+			<xsl:with-param name="indent" select="$indent"/>
+			<xsl:with-param name="indent-elements" select="$indent-elements"/>			
+		</xsl:apply-templates>
+		
+		<xsl:apply-templates select="." mode="verbatim-content">
+			<xsl:with-param name="indent" select="$indent"/>
+			<xsl:with-param name="indent-elements" select="$indent-elements"/>			
+			<xsl:with-param name="depth" select="$depth"/>
+			<xsl:with-param name="indent-increment" select="$indent-increment"/>
+		</xsl:apply-templates>
+		
+		<xsl:apply-templates select="." mode="verbatim-end">
+			<xsl:with-param name="indent" select="$indent"/>
+			<xsl:with-param name="indent-elements" select="$indent-elements"/>						
+		</xsl:apply-templates>
 
-					<xsl:when test="count(descendant::*) gt 10"> … </xsl:when>
-
-					<xsl:when test="$depth gt 0">
-						<xsl:apply-templates mode="xmlverb">
-							<xsl:with-param name="indent-elements" select="$indent-elements"/>
-							<xsl:with-param name="indent"
-								select="concat($indent, $indent-increment)"/>
-							<xsl:with-param name="indent-increment" select="$indent-increment"/>
-							<xsl:with-param name="depth" select="$depth - 1"/>
-						</xsl:apply-templates>
-
-					</xsl:when>
-
-
-					<xsl:otherwise> … </xsl:otherwise>
-
-				</xsl:choose>
-
-				<xsl:if test="* and $indent-elements">
-					<br/>
-					<xsl:value-of select="$indent"/>
-				</xsl:if>
-				<xsl:text>&lt;/</xsl:text>
-				<xsl:if test="$ns-prefix != ''">
-					<span class="xmlverb-element-nsprefix">
-						<xsl:value-of select="$ns-prefix"/>
-					</span>
-					<xsl:text>:</xsl:text>
-				</xsl:if>
-				<span class="xmlverb-element-name">
-					<xsl:value-of select="local-name()"/>
-				</span>
-				<xsl:text>&gt;</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text> /&gt;</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
 		<xsl:if test="not(parent::*)">
 			<br/>
 			<xsl:text>&#xA;</xsl:text>
@@ -171,26 +82,104 @@
 	</xsl:template>
 
 
-	<xsl:template match="*[not(cfn:namespace-prefix(.) = '')]" mode="ns-prefix">
+	<xsl:template match="*" mode="verbatim-start">
+		<xsl:param name="indent" select="''" />
+		<xsl:param name="indent-elements" select="true()"/>
+		
+		<xsl:if test="$indent-elements">
+			<br/>
+			<xsl:value-of select="$indent"/>
+		</xsl:if>
+		
+		<xsl:text>&lt;</xsl:text>
+		<xsl:apply-templates select="." mode="verbatim-ns-prefix"/>
+		<xsl:apply-templates select="." mode="verbatim-element-name"/>
+		<xsl:apply-templates select="." mode="verbatim-ns-declarations"/>
+		<xsl:apply-templates select="@*" mode="verbatim-attributes"/>
+		
+		<xsl:if test="node()">
+			<xsl:text>&gt;</xsl:text>
+		</xsl:if>
+		
+	</xsl:template>
+	
+	
+	<xsl:template match="*[not(node())]" mode="verbatim-end">
+		<xsl:text> /&gt;</xsl:text>
+	</xsl:template>
+	
+	<xsl:template match="*[node()]" mode="verbatim-end">
+		
+		<xsl:param name="indent" select="''"/>
+		<xsl:param name="indent-elements" select="true()"/>
+		
+		<xsl:if test="* and $indent-elements">
+			<br/>
+			<xsl:value-of select="$indent"/>
+		</xsl:if>
+		
+		<xsl:text>&lt;/</xsl:text>
+		<xsl:apply-templates select="." mode="verbatim-ns-prefix"/>
+		<xsl:apply-templates select="." mode="verbatim-element-name"/>
+		<xsl:text>&gt;</xsl:text>
+		
+	</xsl:template>
+
+	<xsl:template match="*[not(cfn:namespace-prefix(.) = '')]" mode="verbatim-ns-prefix">
 		<xsl:variable name="ns" select="cfn:namespace-prefix(.)"/>
 		<span class="xmlverb-element-nsprefix"><xsl:value-of select="cfn:namespace-prefix(.)"/></span><xsl:text>:</xsl:text>		
 	</xsl:template>
 	
-	<xsl:template match="*" mode="ns-prefix"/>
+	<xsl:template match="*" mode="verbatim-ns-prefix"/>
 	
-	<xsl:template match="*" mode="element-name">
+	<xsl:template match="*" mode="verbatim-element-name">
 		<span class="xmlverb-element-name">
-			<xsl:apply-templates select="@xml:id|@id" mode="id-copy"/>
+			<xsl:apply-templates select="@xml:id|@id" mode="verbatim-id-copy"/>
 			<xsl:value-of select="local-name()"/>
 		</span>		
 	</xsl:template>
 	
-	<xsl:template match="@*" mode="id-copy">
-		<xsl:attribute name="xml:id" select="."/>
+	<xsl:template match="*" mode="verbatim-ns-declarations">
+		<xsl:variable name="node" select="."/>
+		<xsl:variable name="in-scope" select="cfn:newly-declared-namespaces(.)"/>
+		<xsl:for-each select="$in-scope[not(. = 'xml')]">
+			<span class="xmlverb-ns-name">
+				<xsl:value-of select="concat(' xmlns', if (. = '') then '' else ':', '=&quot;', namespace-uri-for-prefix(., $node), '&quot;')"/>
+			</span>
+		</xsl:for-each>
 	</xsl:template>
-
-	<!-- attribute nodes -->
-	<xsl:template name="xmlverb-attrs">
+	
+	<xsl:template match="*[node()]" mode="verbatim-content">
+		
+		<xsl:param name="depth"/>
+		<xsl:param name="indent"/>
+		<xsl:param name="indent-increment"/>
+		<xsl:param name="indent-elements"/>
+		
+		<xsl:choose>
+			
+			<xsl:when test="$depth gt 0">
+				<xsl:apply-templates mode="verbatim">
+					<xsl:with-param name="indent-elements" select="$indent-elements"/>
+					<xsl:with-param name="indent"
+						select="concat($indent, $indent-increment)"/>
+					<xsl:with-param name="indent-increment" select="$indent-increment"/>
+					<xsl:with-param name="depth" select="$depth - 1"/>
+				</xsl:apply-templates>
+				
+			</xsl:when>
+			
+			
+			<xsl:otherwise><xsl:text> … </xsl:text></xsl:otherwise>
+			
+		</xsl:choose>
+		
+		
+	</xsl:template>
+	
+	<xsl:template match="*[not(node())]" mode="verbatim-content"/>
+	
+	<xsl:template match="@*" mode="verbatim-attributes">
 		<xsl:text> </xsl:text>
 		<span class="xmlverb-attr-name">
 			<xsl:value-of select="name()"/>
@@ -201,29 +190,12 @@
 		</span>
 		<xsl:text>&quot;</xsl:text>
 	</xsl:template>
-
-	<!-- namespace nodes -->
-	<xsl:template name="xmlverb-ns">
-		<xsl:if test="name()!='xml'">
-			<span class="xmlverb-ns-name">
-				<xsl:text> xmlns</xsl:text>
-				<xsl:if test="name()!=''">
-					<xsl:text>:</xsl:text>
-				</xsl:if>
-				<xsl:value-of select="name()"/>
-			</span>
-			<xsl:text>=&quot;</xsl:text>
-			<span class="xmlverb-ns-uri">
-				<xsl:value-of select="."/>
-			</span>
-			<xsl:text>&quot;</xsl:text>
-		</xsl:if>
+	
+	<xsl:template match="@*" mode="verbatim-id-copy">
+		<xsl:attribute name="xml:id" select="."/>
 	</xsl:template>
 
-	<!-- text nodes 
-      NG - modified to replace large blocks of text with ellipsis 
-      Large is defined as 'more than 50 words' -->
-	<xsl:template match="text()" mode="xmlverb">
+	<xsl:template match="text()" mode="verbatim">
 
 		<span class="xmlverb-text">
 			<xsl:call-template name="preformatted-output">
@@ -233,14 +205,14 @@
 
 	</xsl:template>
 
-	<xsl:template match="text()[contains(., $nl)]">
+	<xsl:template match="text()[contains(., $nl)]" mode="verbatim">
 		<span class="xmlverb-text">
 			<xsl:value-of select="cfn:html-replace-entities(cfn:limit-text(.))"/>
 		</span>
 	</xsl:template>
 
 	<!-- comments -->
-	<xsl:template match="comment()" mode="xmlverb">
+	<xsl:template match="comment()" mode="verbatim">
 		<xsl:text>&lt;!--</xsl:text>
 		<span class="xmlverb-comment">
 			<xsl:call-template name="preformatted-output">
@@ -255,7 +227,7 @@
 	</xsl:template>
 
 	<!-- processing instructions -->
-	<xsl:template match="processing-instruction()" mode="xmlverb">
+	<xsl:template match="processing-instruction()" mode="verbatim">
 		<xsl:text>&lt;?</xsl:text>
 		<span class="xmlverb-pi-name">
 			<xsl:value-of select="name()"/>
@@ -280,26 +252,7 @@
 
 
 
-	<!-- replace in $value substring $from with $to -->
-	<xsl:template name="replace-substring">
-		<xsl:param name="value"/>
-		<xsl:param name="from"/>
-		<xsl:param name="to"/>
-		<xsl:choose>
-			<xsl:when test="contains($value,$from)">
-				<xsl:value-of select="substring-before($value,$from)"/>
-				<xsl:value-of select="$to"/>
-				<xsl:call-template name="replace-substring">
-					<xsl:with-param name="value" select="substring-after($value,$from)"/>
-					<xsl:with-param name="from" select="$from"/>
-					<xsl:with-param name="to" select="$to"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$value"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+
 
 	<!-- preformatted output: space as &nbsp;, tab as 8 &nbsp;
                              nl as <br> -->
