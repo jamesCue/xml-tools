@@ -43,6 +43,7 @@
 
 	<xsl:param name="indent-elements" select="false()"/>
 	<xsl:param name="max-depth" select="10000"/>
+	<xsl:param name="limit-text" select="true()"/>
 
 	<xsl:variable name="tab" select="'&#x9;'"/>
 	<xsl:variable name="tab-out" select="'&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;'"/>
@@ -199,7 +200,9 @@
 
 		<span class="xmlverb-text">
 			<xsl:call-template name="preformatted-output">
-				<xsl:with-param name="text" select="cfn:html-replace-entities(cfn:limit-text(.))"/>
+				<xsl:with-param name="text" select="if ($limit-text = true()) 
+					then cfn:html-replace-entities(cfn:limit-text(.))
+					else cfn:html-replace-entities(.)"/>
 			</xsl:call-template>
 		</span>
 
@@ -337,12 +340,10 @@
 	</doc:documentation>
 	<xsl:function name="cfn:newly-declared-namespaces" as="xs:string*">
 		<xsl:param name="node" as="element()"/>
+		
 		<xsl:variable name="our-namespaces" select="in-scope-prefixes($node)"/>
 		<xsl:variable name="parent-namespaces" select="in-scope-prefixes($node/parent::*)"/>
-		<xsl:value-of
-			select="for $n in $our-namespaces 
-			return if (exists(index-of($parent-namespaces, $n))) then $n else ()"
-		/>
+		<xsl:value-of select="distinct-values($our-namespaces[not(. = $parent-namespaces)])"/>
 	</xsl:function>
 
 	<doc:documentation xmlns:doc="http://www.corbas.co.uk/ns/documentation"
