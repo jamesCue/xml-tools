@@ -86,7 +86,7 @@
             <div class="element">
                 <!-- output a title attribute -->
                 <xsl:call-template name="output-label"/>
-                <xsl:apply-templates select="." mode="xmlverb">
+                <xsl:apply-templates select="." mode="verbatim">
                     <xsl:with-param name="indent-elements" select="true()"/>
                     <xsl:with-param name="depth" select='$depth'/>
                 </xsl:apply-templates>

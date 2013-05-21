@@ -28,6 +28,6 @@
 <manifest xmlns="http://www.corbas.co.uk/ns/transforms/data" xml:base="../xslt/xhtml5/">
 	<item href="rationalise-word-numbering.xsl"/>
 	<item href="word-to-xhtml5-elements.xsl"/>
-	<!--<item href="refactor-lists.xsl"/>
-	<item href="strip-non-xhtml.xsl"/> -->  
+	<item href="refactor-lists.xsl"/>
+	<item href="strip-non-xhtml.xsl"/>  
 </manifest>

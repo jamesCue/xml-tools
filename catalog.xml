@@ -10,7 +10,7 @@
 	<!-- easily accessible identity transform -->
 	<uriSuffix uriSuffix="identity.xslt" uri="xslt/identity.xsl"/>
 	<uriSuffix uriSuffix="identity.xsl" uri="xslt/identity.xsl"/>
-	<uriSuffix uriSuffix="build-mapping-stylesheet.xsl" uri="msword/xslt/build-mapping-stylesheet.xsl"/>
+	<uriSuffix uriSuffix="build-mapping-stylesheet.xsl" uri="xslt/build-mapping-stylesheet.xsl"/>
 	
 	<!-- XProc scripts -->
 	<uriSuffix uriSuffix="store-identity.xpl" uri="xproc/store-identity.xpl"/>

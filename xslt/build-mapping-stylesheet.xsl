@@ -8,10 +8,10 @@
 	xmlns:doc="http://www.corbas.co.uk/ns/documentation"
 	xmlns="http://www.w3.org/1999/XSL/TransformAlias"
 	exclude-result-prefixes="doc cfunc xsd data axsl" version="2.0">
-	
-	
 
-<!--		
+
+
+	<!--		
 		This program and accompanying files are copyright 2008, 2009, 20011, 2012, 2013 Corbas Consulting Ltd.
 		
 		This program is free software: you can redistribute it and/or modify
@@ -31,21 +31,22 @@
 		be able to use and/or distribute this software under a different license. If you are
 		not aware of any such agreement and wish to agree other license terms you must
 		contact Corbas Consulting Ltd by email at corbas@corbas.co.uk.
--->		
-	
-	
+-->
+
+
 	<doc:title>Build Mapping Stylesheet</doc:title>
 
 	<doc:documentation scope="global">
 		<p xmlns="http://www.w3.org/1999/xhtml">This stylesheet is used to read a mapping file (as
 			defined by <code>mapping.rng</code> and convert it to an XSLT stylesheet that can be
 			used to read an incoming XML file, read given elements and write out new ones. </p>
-		<p xmlns="http://www.w3.org/1999/xhtml">The script is part of the Word to XML mapping toolkit and run as part of that pipeline.
-			It is intended to run after the Word document has been converted to elements in the
-			output XML language but not structured. In general, word paragraphs are mapped to output
-			language paragraphs unless they are tables, images or lists. These paragraphs are then
-			refined as appropriate by the output of this stylesheet. See the documentation for
-				<code>mapping.rng</code> for details on the definitions used.</p>
+		<p xmlns="http://www.w3.org/1999/xhtml">The script is part of the Word to XML mapping
+			toolkit and run as part of that pipeline. It is intended to run after the Word document
+			has been converted to elements in the output XML language but not structured. In
+			general, word paragraphs are mapped to output language paragraphs unless they are
+			tables, images or lists. These paragraphs are then refined as appropriate by the output
+			of this stylesheet. See the documentation for <code>mapping.rng</code> for details on
+			the definitions used.</p>
 
 
 		<p xmlns="http://www.w3.org/1999/xhtml">The main output of this stylesheet is driven by
@@ -54,13 +55,33 @@
 			the mapping defined output. There is a pair for each of the options provided by the
 			mapping schema (full match, prefix match and suffix match).</p>
 
-		<p xmlns="http://www.w3.org/1999/xhtml">Copyright Corbas Consulting Ltd 2012-13. <a
-				rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"
-					><img alt="Creative Commons License" style="border-width:0"
-					src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"/></a><br/>This work
-			is licensed under a <a rel="license"
-				href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons
-				Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.</p>
+
+		<div xmlns="http://www.w3.org/1999/xhtml" class="license">
+			<p xmlns="http://www.w3.org/1999/xhtml">This program and accompanying files are
+				copyright 2008, 2009, 20011, 2012, 2013 Corbas Consulting Ltd.</p>
+
+			<p xmlns="http://www.w3.org/1999/xhtml">This program is free software: you can
+				redistribute it and/or modify it under the terms of the GNU General Public License
+				as published by the Free Software Foundation, either version 3 of the License, or
+				(at your option) any later version.</p>
+
+			<p xmlns="http://www.w3.org/1999/xhtml">This program is distributed in the hope that it
+				will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+				MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+				License for more details.</p>
+
+			<p xmlns="http://www.w3.org/1999/xhtml">You should have received a copy of the GNU
+				General Public License along with this program. If not, see
+				http://www.gnu.org/licenses/.</p>
+
+			<p xmlns="http://www.w3.org/1999/xhtml">If your organisation or company are a customer
+				or client of Corbas Consulting Ltd you may be able to use and/or distribute this
+				software under a different license. If you are not aware of any such agreement and
+				wish to agree other license terms you must contact Corbas Consulting Ltd by email at
+				corbas@corbas.co.uk.</p>
+		</div>
+
+
 	</doc:documentation>
 
 	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
@@ -130,7 +151,7 @@
 				class="template">generate-elements</code>is called. <code class="template"
 				>generate-elements</code> is passed a sequence of elements to create and a flag
 			indicating that the process is starting.</p>
-		<p xmlns="http:/www.w3.org/1999/xhtml">The suppress attribute is handled by a simple
+		<p xmlns="http://www.w3.org/1999/xhtml">The suppress attribute is handled by a simple
 			template for each type of input attribute. template.</p>
 	</doc:documentation>
 
@@ -191,9 +212,10 @@
 			element is output but the attributes are manipulate by calling <code name="template"
 				>target-atttributes</code>.</p>
 	</doc:documentation>
-	
+
 	<doc:documentation ref="target-mapping-templates"/>
-	<xsl:template match="mapping[@source-value-prefix][not(@target-element) and @target-attribute-value]"
+	<xsl:template
+		match="mapping[@source-value-prefix][not(@target-element) and @target-attribute-value]"
 		priority="2">
 		<axsl:template match="{cfunc:source-value-prefix(@source-value-prefix)}">
 			<axsl:copy>
@@ -205,7 +227,8 @@
 
 
 	<doc:documentation ref="target-mapping-templates"/>
-	<xsl:template match="mapping[@source-value-suffix][not(@target-element) and @target-attribute-value]"
+	<xsl:template
+		match="mapping[@source-value-suffix][not(@target-element) and @target-attribute-value]"
 		priority="2">
 		<axsl:template match="{cfunc:source-value-suffix(@source-value-suffix)}">
 			<axsl:copy>
@@ -225,7 +248,7 @@
 			</axsl:copy>
 		</axsl:template>
 	</xsl:template>
-	
+
 	<doc:documentation>
 		<p xmlns="http://www.w3.org/1999/xhtml">This function generates a XPath statement as a
 			string used in the output to build the match string (with predicate) for the generated
@@ -264,7 +287,7 @@
 
 
 	<doc:documentation>
-		<p xmlns="http:/www.w3.org/1999/xhtml">This template is the core of the stylesheet. It is
+		<p xmlns="http://www.w3.org/1999/xhtml">This template is the core of the stylesheet. It is
 			called recursively to build the generated templates. Each call to this generates an
 			element in the output and then recurses to call the next. The templates that initialise
 			the process (above) tokenize the space separated list contained in the <code
@@ -276,11 +299,11 @@
 				>heading-level</code> and <code class="attribute">target-attribute-value</code>
 			attributes of the mapping. It additionally generates an <code class="element"
 				>xsl:apply-templates</code> element to copy any id attributes over.</p>
-		<p xmlns="http:/www.w3.org/1999/xhtml">Regardless of whether <code class="param"
+		<p xmlns="http://www.w3.org/1999/xhtml">Regardless of whether <code class="param"
 				>top-level</code> is true, it then generates an <code class="element"
 				>xsl:apply-templates</code> to copy all attributes except id attributes. This leads
 			to most attributes being copied to all generated elements.</p>
-		<p xmlns="http:/www.w3.org/1999/xhtml">The template then calls itself passing the
+		<p xmlns="http://www.w3.org/1999/xhtml">The template then calls itself passing the
 			unprocessed element names to the next recursion.</p>
 	</doc:documentation>
 
@@ -363,7 +386,8 @@
 					<xsl:value-of select="@target-attribute-value"/>
 				</axsl:attribute>
 				<axsl:apply-templates
-					select="@*[not(local-name() = 'id')][not(local-name(.) = '{$target-attribute}')]"/>
+					select="@*[not(local-name() = 'id')][not(local-name(.) = '{$target-attribute}')]"
+				/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

@@ -142,8 +142,10 @@
 	
 	<xsl:template match="*" mode="verbatim-ns-declarations">
 		<xsl:variable name="node" select="."/>
-		<xsl:variable name="in-scope" select="cfn:newly-declared-namespaces(.)"/>
-		<xsl:for-each select="$in-scope[not(. = 'xml')]">
+		<xsl:variable name="in-scope" select="cfn:newly-declared-namespaces(.)" as="xs:string*"/>
+		<xsl:message>Declaring <xsl:value-of select="count($in-scope)"/> new namespaces</xsl:message>
+		<xsl:for-each select="$in-scope">
+			<xsl:message>Declaring: <xsl:value-of select="if (. = '') then '#DEFAULT' else ."/></xsl:message>
 			<span class="xmlverb-ns-name">
 				<xsl:value-of select="concat(' xmlns', if (. = '') then '' else ':', '=&quot;', namespace-uri-for-prefix(., $node), '&quot;')"/>
 			</span>
@@ -327,8 +329,9 @@
 
 		<xsl:param name="node" as="element()"/>
 		<xsl:variable name="uri" select="namespace-uri($node)"/>
+		<xsl:variable name="prefixes" select="in-scope-prefixes($node)"/>
 		<xsl:variable name="prefix"
-			select="for $ns in in-scope-prefixes($node) return if (namespace-uri-for-prefix($ns, $node) = $uri) then ($ns) else ()"/>
+			select="for $ns in $prefixes return if (namespace-uri-for-prefix($ns, $node) = $uri) then ($ns) else ()"/>
 		<xsl:value-of select="$prefix"/>
 
 	</xsl:function>
@@ -342,8 +345,14 @@
 		<xsl:param name="node" as="element()"/>
 		
 		<xsl:variable name="our-namespaces" select="in-scope-prefixes($node)"/>
-		<xsl:variable name="parent-namespaces" select="in-scope-prefixes($node/parent::*)"/>
-		<xsl:value-of select="distinct-values($our-namespaces[not(. = $parent-namespaces)])"/>
+		<xsl:message>Our Namespaces = (<xsl:value-of select="string-join(for $x in $our-namespaces return if ($x = '') then '#DEFAULT' else $x, ' | ')"/>)</xsl:message>
+		<xsl:variable name="ignore-namespaces" select="('xml')"/>
+		<xsl:variable name="parent-namespaces" select="if ($node/parent::*) then in-scope-prefixes($node/parent::*) else ()"/>
+		<xsl:message>Parent Namespaces = (<xsl:value-of select="string-join(for $x in $parent-namespaces return if ($x = '') then '#DEFAULT' else $x, ' | ')"/>)</xsl:message>
+		<xsl:variable name="new-namespaces" select="distinct-values($our-namespaces[not(. = $parent-namespaces)][not(. = $ignore-namespaces)])"/>
+		<xsl:message>New Namespaces = (<xsl:value-of select="string-join(for $x in $new-namespaces return if ($x = '') then '#DEFAULT' else $x, ' | ')"/>)</xsl:message>
+		<xsl:message>Number of new namespaces is: <xsl:value-of select="count($new-namespaces)"/></xsl:message>
+		<xsl:value-of select="$new-namespaces"/>
 	</xsl:function>
 
 	<doc:documentation xmlns:doc="http://www.corbas.co.uk/ns/documentation"
