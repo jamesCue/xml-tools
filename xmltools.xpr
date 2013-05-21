@@ -17,6 +17,10 @@
                         <Boolean>true</Boolean>
                     </entry>
                     <entry>
+                        <String>key.editor.cc.xsl.option.pane</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                    <entry>
                         <String>key.xml.catalog.option.pane</String>
                         <Boolean>true</Boolean>
                     </entry>
@@ -701,6 +705,14 @@
                     <entry>
                         <String>validation.scenarios</String>
                         <validationScenario-array/>
+                    </entry>
+                    <entry>
+                        <String>xslt.documentation.schema.type</String>
+                        <String>documentation_schema_custom</String>
+                    </entry>
+                    <entry>
+                        <String>xslt.documentation.schema.url</String>
+                        <String>file:/Users/nicg/Projects/xmltools/documentation/xsldoc.xsd</String>
                     </entry>
                 </map>
             </serialized>
