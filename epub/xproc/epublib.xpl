@@ -466,7 +466,7 @@
 			<!-- get the filename from the html -->
 			<p:variable name='filename' select="concat($xhtml-dir, /h:html/h:head/h:meta[@name='filename']/@content)"/>
 
-			<p:store>
+			<p:store omit-xml-declaration="false" encoding="utf-8" >
 				<p:with-option name="href" select="$filename"/>
 			</p:store>
 			
