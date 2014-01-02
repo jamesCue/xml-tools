@@ -40,7 +40,7 @@
             <p:pipe port="schema" step="do-schematron"/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="../base/iso_dsdl_include.xsl"/>
+            <p:document href="base/iso_dsdl_include.xsl"/>
         </p:input>
     </p:xslt>
 
@@ -52,7 +52,7 @@
             <p:pipe port="result" step="schematron-includes"/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="../base/iso_abstract_expand.xsl"/>
+            <p:document href="base/iso_abstract_expand.xsl"/>
         </p:input>
     </p:xslt>
 
@@ -65,11 +65,10 @@
             <p:pipe port="result" step="schematron-abstract"/>
         </p:input>
         <p:input port="stylesheet">
-            <p:document href="../base/iso_svrl_for_xslt2.xsl"/>
+            <p:document href="base/iso_svrl_for_xslt2.xsl"/>
         </p:input>
     </p:xslt>
-
-
+	
     <p:xslt version="2.0" name="validate">
         <p:input port="parameters">
             <p:empty/>
@@ -81,6 +80,12 @@
             <p:pipe port="source" step="do-schematron"/>
         </p:input>
     </p:xslt>
+	
+	<p:store name="store-svrl" href="/tmp/reporter.svrl">
+		<p:input port="source">
+			<p:pipe port="result" step="validate"/>
+		</p:input>
+	</p:store>
 
     <p:xslt version="2.0" name="create-reporter-stylesheet">
         <p:input port="parameters">
