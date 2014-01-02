@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://www.corbas.co.uk/ns/transforms/content-map" xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+
+
+	<a:documentation> This program and accompanying files are copyright 2008, 2009, 20011, 2012,
+		2013 Corbas Consulting Ltd. This program is free software: you can redistribute it and/or
+		modify it under the terms of the GNU General Public License as published by the Free
+		Software Foundation, either version 3 of the License, or (at your option) any later version.
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details. You should have received a copy of the
+		GNU General Public License along with this program. If not, see
+		http://www.gnu.org/licenses/. If your organisation or company are a customer or client of
+		Corbas Consulting Ltd you may be able to use and/or distribute this software under a
+		different license. If you are not aware of any such agreement and wish to agree other
+		license terms you must contact Corbas Consulting Ltd by email at corbas@corbas.co.uk. </a:documentation>
+
+	<documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">
+		<p xmlns="http://www.w3.org/1999/xhtml">This schema defines a mechanism for creating a
+			mapping file that describes a series of transformations to specialise an input document.
+			Transformations are driven by text content in the input..</p>
+		<p xmlns="http://www.w3.org/1999/xhtml">The map element contains a list of mappings each of
+			which matches a given node. An XPath statement is used to identify the content to be
+			examined and other elements define the value to be matched. The output element contains
+			the output to be generated either by applying templates or copying.</p>
+	</documentation>
+
+	<start>
+		<ref name="map"/>
+	</start>
+
+	<define name="map">
+		<documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0"
+			xmlns:h="http://www.w3.org/1999/xhtml">
+			<h:p>The <h:code class="element">map</h:code> element wraps the mapping elements and
+				provides the context within which they function.</h:p>
+			<h:p xmlns="http://www.w3.org/1999/xhtml">The <h:code class="element">map</h:code>
+				element has no attributes.</h:p>
+			<hp xmlns="http://www.w3.org/1999/xhtml">The element has two children - the optional
+					<hcode class="element">namespace</hcode> and required <h:code>mapping</h:code>
+				element.</hp>
+		</documentation>
+		<element name="map">
+
+			<group>
+				<zeroOrMore>
+					<ref name="namespace"/>
+				</zeroOrMore>
+				<oneOrMore>
+					<ref name="mapping"/>
+				</oneOrMore>
+			</group>
+
+		</element>
+	</define>
+
+	<define name="mapping">
+		<documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0">
+			<p xmlns="http://www.w3.org/1999/xhtml">The mapping element contains a list of pattern
+				matches and a replacement output. The attributes of the mapping element define the
+				element to be replaced and the XPath statement that identifies the text to be
+				identified.</p>
+			<p xmlns="http://www.w3.org/1999/xhtml">The attributes are:</p>
+			<dl xmlns="http://www.w3.org/1999/xhtml">
+				<dt>node</dt>
+				<dd>The node attribute defines the element to be replaced.</dd>
+				<td>context</td>
+				<dd>The context attribute defines the XPath (relative to the node) that identifies
+					that text to be examined.</dd>
+			</dl>
+		</documentation>
+
+		<element name="mapping">
+			<attribute name="node">
+				<data type="QName"/>
+			</attribute>
+			<attribute name="context">
+				<data type="string"/>
+			</attribute>
+			<oneOrMore>
+				<choice>
+					<ref name="ends-with"/>
+					<ref name="starts-with"/>
+					<ref name="equals"/>
+					<ref name="matches"/>
+				</choice>
+			</oneOrMore>
+			<ref name="output"/>
+		</element>
+	</define>
+
+
+	<define name="apply">
+		<element name="apply">
+			<empty/>
+		</element>
+	</define>
+
+	<define name="copy">
+		<element name="copy">
+			<empty/>
+		</element>
+	</define>
+
+	<define name="output">
+		<choice>
+			<ref name="foreign-elements"/>
+			<ref name="apply"/>
+			<ref name="copy"/>
+		</choice>
+	</define>
+
+	<define name="namespace">
+		<documentation xmlns="http://relaxng.org/ns/compatibility/annotations/1.0"
+			xmlns:h="http://www.w3.org/1999/xhtml">
+			<h:p>The namespace element defines a namespace used in the output and/or input
+				XML.</h:p>
+		</documentation>
+		<element name="namespace">
+			<optional>
+				<attribute name="prefix">
+					<data type="string">
+						<param name="minLength">1</param>
+					</data>
+				</attribute>
+			</optional>
+			<attribute name="uri">
+				<data type="anyURI">
+					<param name="minLength">1</param>
+				</data>
+			</attribute>
+		</element>
+	</define>
+
+
+	<define name="equals">
+
+		<element name="equals">
+			<optional><ref name="case-sensitive"/></optional>
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+		</element>
+	</define>
+
+	<define name="starts-with">
+		<element name="starts-with">
+			<optional><ref name="case-sensitive"/></optional>
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+		</element>
+	</define>
+
+	<define name="ends-with">
+		<element name="ends-with">
+			<optional><ref name="case-sensitive"/></optional>
+			<data type="string">
+				<param name="minLength">1</param>
+			</data>
+
+		</element>
+	</define>
+
+
+	<define name="matches">
+		<element name="matches">
+			<optional><ref name="case-sensitive"/></optional>
+			<choice>
+				<value>yes</value>
+				<value>no</value>
+			</choice>
+		</element>
+	</define>
+
+
+	<define name="case-sensitive">
+		<!-- assume false unless  true -->
+		<attribute name="case-sensitive">
+			<data type="boolean"/>
+		</attribute>
+	</define>
+
+	<define name="anything">
+		<zeroOrMore>
+			<choice>
+				<element>
+					<anyName/>
+					<ref name="anything"/>
+				</element>
+				<attribute>
+					<anyName/>
+				</attribute>
+				<text/>
+			</choice>
+		</zeroOrMore>
+	</define>
+
+	<define name="foreign-elements">
+		<zeroOrMore>
+			<element>
+				<anyName>
+					<except>
+						<nsName ns="http://www.corbas.co.uk/ns/transforms/data"/>
+					</except>
+				</anyName>
+				<ref name="anything"/>
+			</element>
+		</zeroOrMore>
+	</define>
+
+</grammar>

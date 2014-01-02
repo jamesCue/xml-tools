@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../schemas/content-mapping.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<map xmlns="http://www.corbas.co.uk/ns/transforms/content-map" xmlns:map="http://www.corbas.co.uk/ns/transforms/content-map">
+	<namespace uri="http://www.corbas.co.uk/test" prefix="test"/>
+	<mapping node="bar" context="intro">
+		<equals>Test me</equals>
+		<output>
+			<foo  xmlns=""><map:apply/></foo>
+		</output>
+	</mapping>
+</map>
