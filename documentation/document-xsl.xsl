@@ -14,10 +14,13 @@
 
 	<!-- override some verbatim params -->
 	<xsl:param name="limit-text" select="false()"/>
+	<xsl:param name="indent-elements" select="true()"/>
 
 	<xsl:param name="default-title">XSL Documentation</xsl:param>
 	<xsl:param name="stylesheet">documentation.css</xsl:param>
 	<xsl:param name="generate-verbatim" select="true()"/>
+
+
 
 	<doc:documentation scope="parameter" xmlns="http://www.w3.org/1999/xhtml">
 		<p>The see text should contain the text to be use for "See foobar" type references. The
@@ -34,8 +37,17 @@
 	<xsl:param name="xhtml-suffix" select="'xhtml'"/>
 
 
+	<doc:documentation xmlns="http://www.w3.org/1999/xhtml" scope="variable">
+		<p>We load the stylesheet into the styles variable so that we can insert it directly
+		into the code. This causes fewer issues with it being in the right place but might
+		cause problems with @import, etc. Needs to be reviewed.</p>
+	</doc:documentation>
 	<xsl:variable name="styles" select="unparsed-text($stylesheet)"/>
 
+	<doc:documentation xmlns="http://www.w3.org/1999/xhtml" scope="template">
+		<p>This template forces an abort if documentation contains anything except
+		xhtml. This should be overridden if </p>
+	</doc:documentation>
 	<xsl:template match="/">
 
 		<xsl:if
@@ -78,7 +90,8 @@
 			select="xsl:template[@match][not(@match = $element-match-templates/@match)][not(@match = $attribute-match-templates/@match)]"/>
 		<xsl:variable name="named-templates" select="xsl:template[not(@match)][@name]"/>
 		<xsl:variable name="functions" select="xsl:function"/>
-		<xsl:variable name="match-templates" select="($element-match-templates, $attribute-match-templates, $other-match-templates)"/>
+		<xsl:variable name="match-templates"
+			select="($element-match-templates, $attribute-match-templates, $other-match-templates)"/>
 
 		<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
@@ -129,7 +142,7 @@
 
 					</div>
 				</xsl:if>
-				
+
 				<xsl:if test="$named-templates">
 					<div class="named-templates section">
 						<h2>Named Templates</h2>
@@ -188,9 +201,30 @@
 	<xsl:template match="doc:documentation[not(@ref)]">
 
 		<div class="documentation">
-			<xsl:apply-templates select="*"/>
+			<!-- sequence important -->
+			<xsl:apply-templates select="(@xml:id, @label, *)"/>
 		</div>
 
+	</xsl:template>
+
+
+	<doc:documentation>
+		<p xmlns="http://www.w3.org/1999/xhtml">Map <code class="attribute">@xml:id</code>
+			attributes on documentation to html <code class="attribute">id</code> attributes</p>
+	</doc:documentation>
+	<xsl:template match="doc:documentation/@xml:id">
+		<xsl:attribute name="id" select="."/>
+	</xsl:template>
+
+
+	<doc:documentation>
+		<p xmlns="http://www.w3.org/1999/xhtml">Map <code class="attribute">@label</code> attributes
+			on documentation to html <code class="element">h4</code> elements</p>
+	</doc:documentation>
+	<xsl:template match="doc:documentation/@label">
+		<h4 class="doc-label">
+			<xsl:value-of select="."/>
+		</h4>
 	</xsl:template>
 
 
@@ -199,28 +233,36 @@
 			than having content, output a 'see' message.</p>
 	</doc:documentation>
 	<xsl:template match="doc:documentation[@ref]">
-		<div class="documentation">
 
-			<xsl:if test="not(//doc:documentation[@xml:id = current()/@ref])">
-				<xsl:message terminate="yes">Unable to find referenced documentation with id
-						'<xsl:value-of select="@ref"/>'. </xsl:message>
-			</xsl:if>
+		<xsl:if test="not(//doc:documentation[@xml:id = current()/@ref])">
+			<xsl:message terminate="yes">Unable to find referenced documentation with id
+					'<xsl:value-of select="@ref"/>'. </xsl:message>
+		</xsl:if>
 
-			<xsl:variable name="ref-node" select="//doc:documentation[@xml:id = current()/@ref]"/>
+		<!-- Get the documentation node -->
+		<xsl:variable name="ref-node" select="//doc:documentation[@xml:id = current()/@ref]"/>
 
-			<h4 class="see-ref">
-				<a href="#{@ref}">
-					<xsl:value-of select="replace($see-text, '__replace__', $ref-node/@label)"/>
-				</a>
-			</h4>
 
-		</div>
+		<!-- If there are xsl node of the same type as the current node
+				between the current node and the documentation then we need
+				to put in the see message -->
+		<xsl:if test="preceding-sibling::*[local-name(.) eq local-name(current())][. >> $ref-node]">
+			<div class="documentation">
+				<h4 class="see-ref">
+					<a href="#{@ref}">
+						<xsl:value-of select="replace($see-text, '__replace__', $ref-node/@label)"/>
+					</a>
+				</h4>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<doc:documentation xml:id="templates" label="xsl:template">
 		<p xmlns="http://www.w3.org/1999/xhtml">Process templates with a match attribute.</p>
 	</doc:documentation>
 	<xsl:template match="xsl:template[@match][not(@xsl:param)]">
+			<xsl:apply-templates
+			select="preceding-sibling::*[1][self::doc:documentation][not(@scope) or @scope ='template']" mode="shared-docs"/>
 		<div class="element" id="{generate-id()}">
 			<xsl:apply-templates select="@match|@mode"/>
 			<xsl:apply-templates
@@ -231,6 +273,8 @@
 
 	<doc:documentation ref="templates"/>
 	<xsl:template match="xsl:template[@match][xsl:param]">
+		<xsl:apply-templates
+			select="preceding-sibling::*[1][self::doc:documentation][not(@scope) or @scope ='template']" mode="shared-docs"/>
 		<div class="element">
 			<xsl:apply-templates select="@match|@mode"/>
 			<xsl:apply-templates
@@ -261,10 +305,8 @@
 	</doc:documentation>
 	<xsl:template match="xsl:template|xsl:function" mode="verbatim-xsl">
 		<xsl:if test="$generate-verbatim = true()">
-			<div class="verbatim-xsl">
-				<pre>
-					<xsl:apply-templates select="." mode="verbatim"/>
-				</pre>
+			<div class="verbatim">
+				<xsl:apply-templates select="." mode="verbatim"/>
 			</div>
 		</xsl:if>
 	</xsl:template>
@@ -274,9 +316,7 @@
 			current group then we are group on mode and we do nothing</p>
 	</doc:documentation>
 	<xsl:template match="@match">
-		<xsl:if test="not(current-group())">
-			<h3 class="match"> Template Matching «<xsl:value-of select="."/>» </h3>
-		</xsl:if>
+		<h3 class="match"> Template Matching «<xsl:value-of select="."/>» </h3>
 	</xsl:template>
 
 	<doc:documentation>
@@ -294,6 +334,32 @@
 	<xsl:template match="@mode">
 		<h4 class="mode">Mode: «<xsl:value-of select="."/>»</h4>
 	</xsl:template>
+
+
+	<!-- Generate shared template docs if appropriate for context -->
+	<xsl:template match="doc:documentation[@ref]" mode="shared-docs">
+
+		<xsl:if test="not(//doc:documentation[@xml:id = current()/@ref])">
+			<xsl:message terminate="yes">Unable to find referenced documentation with id
+					'<xsl:value-of select="@ref"/>'. </xsl:message>
+		</xsl:if>
+
+		<!-- Get the documentation node -->
+		<xsl:variable name="ref-node" select="//doc:documentation[@xml:id = current()/@ref]"/>
+
+		<!-- If this node is the first in the document with the documentation reference,
+				generate the documentation. If not, generate the reference. -->
+
+		<xsl:if test="not(preceding-sibling::doc:documentation[@ref = current()/@ref])">
+			<div class="documentation">
+				<xsl:apply-templates select="$ref-node"/>
+			</div>
+		</xsl:if>
+
+
+	</xsl:template>
+
+	<xsl:template match="doc:documentation[not(@ref)]" mode="shared-docs"/>
 
 
 	<!-- Included content -->
