@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="urn:x-corbas:testns1"  xmlns:test2="urn:x-corbas:testns2" test2:attrib1="value1" attrib2="value2">
+	<content xmlns="urn:x-corbas:testns3">Textual Content</content>
+</document>
