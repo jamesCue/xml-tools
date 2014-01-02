@@ -22,6 +22,16 @@
 	not aware of any such agreement and wish to agree other license terms you must
 	contact Corbas Consulting Ltd by email at corbas@corbas.co.uk. -->
     
+    
+    <xd:doc scope="stylesheet">
+    	<xd:desc>
+    		<xd:p>These templates are used both by the final report generator and by the 
+    		report stylesheet generator. They are simple templates used to wrap
+    		up repeated output functionality.</xd:p>
+    	</xd:desc>
+    </xd:doc>
+	
+    
     <xsl:template name="output-label">
         <xsl:param name="role"/>
         <xsl:param name="id"/>
