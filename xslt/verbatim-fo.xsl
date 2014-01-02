@@ -56,7 +56,7 @@
 	<xsl:attribute-set name="verbatim-default">
 		<xsl:attribute name="color">#333333</xsl:attribute>
 		<xsl:attribute name="font-family">monospace</xsl:attribute>
-		<xsl:attribute name="font-size">80%</xsl:attribute>
+		<xsl:attribute name="font-size">90%</xsl:attribute>
 		<xsl:attribute name="margin-bottom">1em</xsl:attribute>
 	</xsl:attribute-set>
 

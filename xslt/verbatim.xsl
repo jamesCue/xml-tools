@@ -424,7 +424,7 @@
 			</xsl:call-template>
 		</span>
 		<xsl:text>--&gt;</xsl:text>
-		<xsl:if test="not(parent::*)">
+		<xsl:if test="parent::*">
 			<br/>
 			<xsl:text>&#xA;</xsl:text>
 		</xsl:if>
