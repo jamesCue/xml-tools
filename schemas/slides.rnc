@@ -1,0 +1,82 @@
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+default namespace pres = "http://www.corbas.co.uk/ns/presentations"
+namespace html = "http://www.w3.org/1999/xhtml"
+namespace local = ""
+
+start = slides.presentation
+
+include "xhtml5/slides-xhtml.rnc"
+
+
+## Foreign content:
+anything = ( element * { anything } | attribute * { text } | text )*
+foreign-elements = element * - (local:* | pres:*) {anything}*
+
+## Our content model is based on the content of the html body element
+presentation.slide.model = (html5.section.model & slides.code*)
+
+## href attribute for all inclusion based elements
+slides.href = attribute href {xsd:anyURI {minLength = "1"}}
+
+## xml id can be used on any element.
+xml.id = attribute xml:id {datatype.ID}
+
+## xml base can also be used 
+xml.base = attribute xml:base {xsd:anyURI}
+
+## true/false values
+slides.true-false = ('true' | 'false')
+
+## suppress a slide
+slides.suppress.options = ('always' | 'html' | 'print')
+
+## suppress attribute
+slides.suppress = attribute suppress {slides.suppress.options}
+
+## set CSS classes.
+slides.class = attribute class {text}
+
+## set TOC exclusion
+slides.toc.options = ('include' | 'exclude')
+slides.toc.attribute = attribute toc {slides.toc.options}
+
+
+## presentation is our root element.
+slides.presentation.content = (slides.title?, (slides.div | slides.slide | slides.notes | slides.code | slides.presentation.import)+)
+slides.presentation.attributes = (xml.id? & xml.base? & slides.toc.attribute?)
+slides.presentation = element presentation {slides.presentation.attributes, slides.presentation.content}
+
+## presentation inclusions
+slides.presentation.import.href.attribute = attribute href {xsd:anyURI} 
+slides.presentation.import.attributes = (slides.presentation.import.href.attribute)
+slides.presentation.import.content = (empty)
+slides.presentation.import = element import {slides.presentation.import.attributes,slides.presentation.import.content} 
+
+## most of out content is slide elements.
+slides.slide.content = presentation.slide.model
+slides.slide.attributes = (xml.id? & xml.base? & slides.class? & slides.suppress? & slides.toc.attribute?)
+slides.slide = element slide {slides.slide.attributes, slides.slide.content }
+
+## slides can be grouped into divs (for toc generation)
+slides.div.attributes = (xml.id? & xml.base? & slides.toc.attribute?)
+slides.div.content = (slides.title?, slides.slide+)
+slides.div = element div {slides.div.attributes, slides.div.content}
+
+## we also have notes elements
+slides.notes.content = presentation.slide.model
+slides.notes.attributes = (xml.id? & slides.suppress?)
+slides.notes = element notes {slides.notes.attributes, slides.notes.content}
+
+## Titles for presentations and code elements
+slides.title.content = (text)
+slides.title = element title {slides.title.content}
+
+## Code elements
+slides.code.type.attribute.values = ('xml' | 'xhtml' | 'text' )
+slides.code.type.attribute = attribute type {slides.code.type.attribute.values}
+slides.code.href.attribute = attribute href {xsd:anyURI}
+slides.code.show-ns-declarations.attribute = attribute show-ns-declarations {slides.true-false}
+
+slides.code.attributes = (slides.code.href.attribute? & xml.id? & xml.base? & slides.class? & slides.code.type.attribute? & slides.code.show-ns-declarations.attribute?)
+slides.code.content = (slides.title? , (text | foreign-elements+))
+slides.code = element code {slides.code.attributes, slides.code.content}
