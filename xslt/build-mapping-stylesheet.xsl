@@ -152,7 +152,7 @@
 				>generate-elements</code> is passed a sequence of elements to create and a flag
 			indicating that the process is starting.</p>
 		<p xmlns="http://www.w3.org/1999/xhtml">The suppress attribute is handled by a simple
-			template for each type of input attribute. template.</p>
+			template for each type of input attribute.</p>
 	</doc:documentation>
 
 	<doc:documentation ref="mapping-templates"/>
